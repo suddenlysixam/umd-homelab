@@ -1,8 +1,8 @@
 ---
-sort: 2
+sort: 1
 ---
 
-# Past Meetings
+# Upcoming Meetings
 
 {% for p in site.pages %}
 {% if p.url contains page.dir and p.url contains 'html' %}
