@@ -2,7 +2,7 @@
 sort: 2
 ---
 
-# Past Meetings
+# Past Meetings/Projects
 
 {% for p in site.pages %}
 {% if p.url contains page.dir and p.url contains 'html' %}
