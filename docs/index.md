@@ -2,9 +2,7 @@
 
 {% for p in site.pages %}
 {% if p.url contains "upcoming" and p.url contains 'html' %}
-
 ### **The UMD Homelab Club's next meeting will be on: [{{ p.title }}]({{ p.url | relative_url }})**
-
 {% break %}
 {% endif %}
 {% endfor %}
