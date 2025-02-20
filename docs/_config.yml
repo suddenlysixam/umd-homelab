@@ -1,7 +1,8 @@
 title: UMD Homelab Club
 description: >- # this means to ignore newlines until "baseurl:"
   UMD Homelab Club
-url: "https://suddenlysixam.github.io"
+# url: "https://suddenlysixam.github.io"
+url: "https://suddenlysixam.club"
 # baseurl: "/umd-homelab"
 
 remote_theme: https://github.com/JV-conseil/jekyll-theme-read-the-docs
