@@ -1,3 +1,8 @@
+---
+redirect_from:
+  - /discord
+---
+
 # Join us on Discord
 
 [![Discord](https://img.shields.io/discord/1268383647111708683?style=social&logo=discord&logoColor=blue&label=Click%20here%20or%20scan%20the%20QR%20code%20below%20to%20join%20our%20Discord%20server)

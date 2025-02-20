@@ -7,3 +7,4 @@ url: "https://suddenlysixam.github.io"
 remote_theme: https://github.com/JV-conseil/jekyll-theme-read-the-docs
 plugins:
   - jekyll-remote-theme
+  - jekyll-redirect-from
