@@ -10,11 +10,11 @@
 ## Project: Self Hosted Git
 
 1. [Project: Installing Raspberry Pi OS](/meetings/past_meetings/2024-12-02-meeting)
-1. [Remote Access](/meetings/past_meetings/2024-02-10-meeting)
-1. [Project: Self Hosted Git](/meetings/past_meetings/2024-02-17-meeting)
+1. [Remote Access](/meetings/past_meetings/2025-02-10-meeting)
+1. [Project: Self Hosted Git](/meetings/past_meetings/2025-02-17-meeting)
 
 ## Project: Self Hosted DNS
 
 1. [Project: Installing Raspberry Pi OS](/meetings/past_meetings/2024-12-02-meeting)
-1. [DNS](/meetings/past_meetings/2024-02-24-meeting)
-1. [Project: Self Hosted DNS](/meetings/past_meetings/2024-03-03-meeting)
+1. [DNS](/meetings/past_meetings/2025-02-24-meeting)
+1. [Project: Self Hosted DNS](/meetings/upcoming_meetings/2025-03-03-meeting)
