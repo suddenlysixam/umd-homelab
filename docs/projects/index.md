@@ -1,3 +1,7 @@
+---
+sort: 3
+---
+
 # Projects
 
 {% for p in site.pages %}

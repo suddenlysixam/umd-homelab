@@ -1,6 +1,8 @@
-# Getting Started
+---
+sort: 1
+---
 
-<!-- {:toc} -->
+# Getting Started
 
 {% for p in site.pages %}
 {% if p.url contains page.dir and p.url contains 'html' %}
