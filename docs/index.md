@@ -1,9 +1,11 @@
 # UMD Homelab Club
 
 {% for p in site.pages %}
-{% if p.url contains "upcoming" and p.url contains 'html' %}
+{% if p.url contains "meetings" and p.url contains 'html' %}
+{% unless p.url contains "past" %}
 ### **The UMD Homelab Club's next meeting will be on: [{{ p.title }}]({{ p.url | relative_url }})**
 {% break %}
+{% endunless %}
 {% endif %}
 {% endfor %}
 
