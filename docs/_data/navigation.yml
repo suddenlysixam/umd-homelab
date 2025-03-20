@@ -1,0 +1,13 @@
+header:
+  - title: About
+    url: /about
+  - title: Upcoming Meetings
+    url: /meetings
+  - title: Resources
+    url: /resources
+  - title: FAQ
+    url: /faq
+  - title: Discord
+    url: /discord
+  - title: Archive
+    url: /archive.html

@@ -4,8 +4,57 @@ description: >- # this means to ignore newlines until "baseurl:"
 # url: "https://suddenlysixam.github.io"
 # url: "https://suddenlysixam.club"
 # baseurl: "/umd-homelab"
+repository: suddenlysixam/umd-homelab
 
-remote_theme: https://github.com/JV-conseil/jekyll-theme-read-the-docs
+# remote_theme: https://github.com/JV-conseil/jekyll-theme-read-the-docs
+remote_theme: https://github.com/suddenlysixam/jekyll-TeXt-theme
+# theme: jekyll-text-theme
+# text_skin: dark
+# highlight_theme: tomorrow-night
 plugins:
-  - jekyll-remote-theme
+  # - jekyll-remote-theme
   - jekyll-redirect-from
+  - jekyll-feed
+  - jekyll-paginate
+  - jekyll-sitemap
+
+lang: en
+timezone: America/New_York
+future: true
+
+toc:
+  selectors: "h1,h2,h3"
+
+# paginate: 8
+# paginate_path: /page:num
+
+search:
+  provider: default
+
+collections:
+  meetings:
+    output: true
+  knowledge:
+    output: true
+  projects:
+    output: true
+
+defaults:
+  - scope:
+      path: "" # an empty string here means all files in the project
+      type: posts
+    values:
+      layout: "article"
+      show_date: false
+      show_author_profile: true
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "article"
+      sidebar:
+        col: [knowledge, projects]
+      aside:
+        toc: true
+
+sources: unpkg

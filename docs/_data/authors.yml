@@ -1,0 +1,22 @@
+Megan Steeley:
+  name: Megan Steeley
+  url: https://www.umiacs.umd.edu/our-experts/staff/megan-steeley
+  # avatar: https://media.licdn.com/dms/image/v2/D4E03AQHUvlOoxpJrNQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1730142081378?e=1747267200&v=beta&t=V6y2kF-UwkEodPOsprC7L38u8QqQ-XNNFFTB-w1iow4
+  avatar: https://www.umiacs.umd.edu/sites/default/files/styles/optimized/public/people/Steeley%2C%20Megan.jpg?itok=NdBvDhp-
+  bio: System Administrator and Technical Students Program Coordinator at the University of Maryland Institute for Advanced Computer Studies (UMIACS)
+  linkedin: megdorkable # "user_name" the last part of your profile url, e.g. https://www.linkedin.com/in/user_name
+  github: suddenlysixam # "user_name" the last part of your profile url, e.g. https://github.com/user_name
+
+Joe Ridge:
+  name: Joe Ridge
+  url: https://www.umiacs.umd.edu/our-experts/staff/joe-ridge
+  avatar: https://www.umiacs.umd.edu/sites/default/files/styles/optimized/public/IMG_9870.jpeg?itok=EAAm0Qj6
+  bio: Assistant Director, Technical Students Program at the University of Maryland Institute for Advanced Computer Studies (UMIACS)
+  linkedin: edward-ridge-979a6a5b
+  github: ridge-umiacs
+
+Stephen Eide:
+  name: Stephen Eide
+  url: https://www.umiacs.umd.edu/our-experts/staff/stephen-eide
+  avatar: https://www.umiacs.umd.edu/sites/default/files/styles/optimized/public/Eide%2C%20Stephen%20cropped%20for%20UMIACS%20site.jpg?itok=b4poT9NM
+  bio: Systems Engineer at the University of Maryland Institute for Advanced Computer Studies (UMIACS)
