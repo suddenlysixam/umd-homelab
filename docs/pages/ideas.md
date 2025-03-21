@@ -1,7 +1,6 @@
 ---
 title: Send us your project ideas!
-redirect_from:
-  - /ideas
+permalink: /ideas
 ---
 
 **Please be sure to checkout out our [past meetings]({{"/archive" | relative_url}}) to see what we have done recently.**
