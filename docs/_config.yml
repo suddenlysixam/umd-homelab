@@ -6,6 +6,13 @@ description: >- # this means to ignore newlines until "baseurl:"
 # baseurl: "/umd-homelab"
 repository: suddenlysixam/umd-homelab
 
+author:
+  type: organization
+  name: Homelab Club at UMD
+  url: https://suddenlysixam.club/
+  avatar: assets/apple-touch-icon.png
+  github: suddenlysixam/umd-homelab
+
 # remote_theme: https://github.com/JV-conseil/jekyll-theme-read-the-docs
 remote_theme: https://github.com/suddenlysixam/jekyll-TeXt-theme
 # theme: jekyll-text-theme
