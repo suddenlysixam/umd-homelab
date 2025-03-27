@@ -1,13 +1,12 @@
 ---
 layout: articles_collections
-title: Resources
-permalink: /resources
-key: resources
+title: Documentation
+permalink: /docs
 # cover: /docs/assets/images/axure/articles-brief-info.jpg
 articles:
   data_sources: [site.knowledge, site.projects]
   type: brief
-  show_info: false
+  show_info: true
   # type: grid
-  # size: sm
+  # size: md
 ---

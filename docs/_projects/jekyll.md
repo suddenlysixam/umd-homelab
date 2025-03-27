@@ -2,7 +2,7 @@
 title: "Jekyll: Live Resume"
 date: 2025-03-24
 modify_date: 2025-03-24
-cover: /assets/images/covers/2025-02-17_Self-Hosted-Git-08.png
+cover: /assets/images/covers/2025-03-24_jekyll-live-resume.png
 ---
 
 In this project, we are going to use a combination of GitHub Pages and Jekyll to create an updatable ("live") resume in the form of a static website. We are using GitHub Pages for the site hosting (for free!) and Jekyll for the static site generation.

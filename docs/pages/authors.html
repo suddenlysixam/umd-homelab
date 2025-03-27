@@ -1,0 +1,29 @@
+---
+layout: article
+title: Authors
+permalink: /authors
+---
+
+{%- assign _sorted_authors = "" | split: ',' -%}
+{%- for author in site.data.authors -%}
+    {% assign _sorted_authors = _sorted_authors | push: author[1] %}
+{%- endfor -%}
+{% assign _sorted_authors = _sorted_authors | sort: 'name' %}
+
+<table style="border:0px solid">
+    {% for _author in _sorted_authors %}
+    {%- assign _author-link = _author.name | downcase | replace: " ", "-" -%}
+    <tr style="border:0px solid">
+        <td style="border:0px solid;width:50%">
+            <!-- <h3><a href="{{ _author-link }}">{{ _author.name }}</a></h3> -->
+            {% include article/footer/author-profile.html author=_author %}
+        </td>
+        <td style="border:0px solid;padding-left:30px;">
+            {%- if _author.role != null -%}
+                <b>Role: {{ _author.role | capitalize }}</b></br>
+            {%- endif -%}       
+            <i><a href="{{ _author-link }}">Click here to see all of {{ _author.name }}'s past presentations</a></i>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
