@@ -22,7 +22,7 @@ permalink: /authors
             {%- if _author.role != null -%}
                 <b>Role: {{ _author.role | capitalize }}</b></br>
             {%- endif -%}       
-            <i><a href="{{ _author-link }}">Click here to see all of {{ _author.name }}'s past presentations</a></i>
+            <i><a href="/authors/{{ _author-link }}">Click here to see all of {{ _author.name }}'s past presentations</a></i>
         </td>
     </tr>
     {% endfor %}
