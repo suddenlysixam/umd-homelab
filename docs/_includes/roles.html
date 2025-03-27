@@ -1,0 +1,62 @@
+{% assign _president = site.data.authors | where_exp:"item","item.role == 'president'" %}
+
+{%- if _president != empty -%}
+### President
+
+<div>
+    {% for _author in _president %}
+        {% include article/footer/author-profile.html author=_author %}
+    {% endfor %}
+</div>
+{%- endif -%}
+
+
+{% assign _treasurer = site.data.authors | where_exp:"item","item.role == 'treasurer'" %}
+
+{%- if _treasurer != empty -%}
+### Treasurer
+
+<div>
+    {% for _author in _treasurer %}
+        {% include article/footer/author-profile.html author=_author %}
+    {% endfor %}
+</div>
+{%- endif -%}
+
+
+{% assign _officers = site.data.authors 
+    | where_exp:"item","item.role != null"
+    | where_exp:"item","item.role != 'president'"
+    | where_exp:"item","item.role != 'treasurer'"
+    | where_exp:"item","item.role != 'advisor'"
+%}
+
+{%- if _officers != empty -%}
+### Additional Officers
+
+<div>
+    {% for _author in _officers %}
+        <h4>{{ _author.role | capitalize }}</h4>
+        {% include article/footer/author-profile.html author=_author %}
+    {% endfor %}
+</div>
+{%- endif -%}
+
+
+{% assign _advisors = site.data.authors | where_exp:"item","item.role == 'advisor'" %}
+
+{%- if _advisors != empty -%}
+### Advisors
+
+{%- assign _sorted_authors = "" | split: "," -%}
+{%- for advisor in _advisors -%}
+    {%- assign _sorted_authors = _sorted_authors | push: advisor -%}
+{%- endfor -%}
+{% assign _sorted_authors = _sorted_authors | sort: 'name' %}
+
+<div>
+    {% for _author in _sorted_authors %}
+        {% include article/footer/author-profile.html author=_author %}
+    {% endfor %}
+</div>
+{%- endif -%}
