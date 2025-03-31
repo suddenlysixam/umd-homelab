@@ -40,12 +40,6 @@ search:
   provider: default
 
 collections:
-  meetings:
-    output: true
-  knowledge:
-    output: true
-  projects:
-    output: true
   authors:
     output: true
 
@@ -58,13 +52,24 @@ defaults:
       show_date: false
       show_author_profile: true
   - scope:
-      path: ""
-      type: "projects"
+      path: "projects"
     values:
       layout: "article"
       sidebar:
-        col: [knowledge, projects]
+        cat: [knowledge, projects]
       aside:
         toc: true
+      permalink: /projects/:title:output_ext
+      categories: projects
+  - scope:
+      path: "knowledge"
+    values:
+      layout: "article"
+      sidebar:
+        cat: [knowledge, projects]
+      aside:
+        toc: true
+      permalink: /knowledge/:title:output_ext
+      categories: knowledge
 
 sources: unpkg

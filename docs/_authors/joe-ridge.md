@@ -1,4 +1,4 @@
 ---
-layout: author-archive
+layout: archive-author
 author: Joe Ridge
 ---

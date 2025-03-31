@@ -1,12 +1,8 @@
 ---
-layout: articles_collections
+layout: archive-categories
 title: Documentation
 permalink: /docs
-# cover: /docs/assets/images/axure/articles-brief-info.jpg
+# cover: /docs/assets/images/
 articles:
-  data_sources: [site.knowledge, site.projects]
-  type: brief
-  show_info: true
-  # type: grid
-  # size: md
+  data_sources: [knowledge, projects]
 ---
