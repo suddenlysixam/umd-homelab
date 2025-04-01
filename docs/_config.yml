@@ -14,13 +14,11 @@ author:
   github: suddenlysixam/umd-homelab
   linkedin: company/homelab-club-at-umd
 
-# remote_theme: https://github.com/JV-conseil/jekyll-theme-read-the-docs
 remote_theme: https://github.com/suddenlysixam/jekyll-TeXt-theme
-# theme: jekyll-text-theme
 # text_skin: dark
 # highlight_theme: tomorrow-night
 plugins:
-  # - jekyll-remote-theme
+  - jekyll-remote-theme
   - jekyll-redirect-from
   - jekyll-feed
   - jekyll-paginate
