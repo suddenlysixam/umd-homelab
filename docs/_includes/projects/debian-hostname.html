@@ -1,0 +1,26 @@
+1. Edit `/etc/hosts`. Change the line that looks something like `127.0.1.1	raspberrypi`. Replace `raspberrypi` with your hostname.
+
+    e.g.
+    ```
+    sudo vi /etc/hosts
+    ```
+1. Edit `/etc/hostname`. Replace the hostname in the file with your new hostname.
+
+    e.g.
+    ```
+    sudo vi /etc/hostname
+    ```
+1. Reboot the Pi:
+    ```
+    sudo shutdown -r now
+    ```
+1. One the host has finished rebooting, check to see if your changes applied:
+    ```
+    hostname
+    ```
+
+**Note:** You might ask, why not use `sudo hostnamectl set-hostname <your-hostname>`? If you are curious, you can run this and then `cat` the mentioned files, and see what has changed.
+{:.info}
+
+**Note:** After you set the hostname and before you reboot, it may yell at you about the previous hostname name/service not being known.
+{:.info}

@@ -1,0 +1,36 @@
+In our case, we will be using _NetworkManager_ to set a static IP.
+
+```
+nmcli
+```
+```
+nmcli connection show
+```
+
+Take note of the "Name" of the connection you are using. (NOT the "Device". Sometimes these will be the same, but not always.)
+
+```
+sudo nmcli con mod "<connection-name>" ipv4.addresses <ip-address>/<subnet-mask>
+```
+```
+sudo nmcli con mod "<connection-name>" ipv4.gateway <gateway-ip-address>
+```
+```
+sudo nmcli con mod "<connection-name>" ipv4.method manual
+```
+```
+sudo nmcli con down "<connection-name>" && sudo nmcli con up "<connection-name>"
+```
+
+```
+nmcli
+```
+
+**Note:** `sudo systemctl restart NetworkManager` will add the new config, but will not remove the old, which is not ideal. This is why we are running the `up` and `down` commands for the connection. You could also reboot your pi.
+{:.warning}
+
+**Note:** Some parts of these commands can be shortened, such as `connection` > `con`. Some can be shortened even further.
+{:.info}
+
+**Note:** `<subnet-mask>` based on the netmask. ([subnet mask cheat sheet](https://dnsmadeeasy.com/support/subnet))
+{:.info}

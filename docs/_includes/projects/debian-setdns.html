@@ -1,0 +1,40 @@
+In our case, we will be using _NetworkManager_ to modify our DNS servers.
+
+```
+nmcli
+```
+```
+nmcli connection show
+```
+
+Take note of the "Name" of the connection you are using. (NOT the "Device". Sometimes these will be the same, but not always.)
+
+```
+sudo nmcli con mod "<connection-name>" ipv4.dns "<space-separated-dns-ips>"
+```
+```
+sudo nmcli con mod "<connection-name>" ipv4.ignore-auto-dns yes
+```
+```
+sudo nmcli con down "<connection-name>" && sudo nmcli con up "<connection-name>"
+```
+
+```
+nmcli
+```
+
+(Optional) Set a search domain
+
+```
+sudo nmcli con mod "<connection-name>" ipv4.dns-search "<domain>"
+```
+```
+sudo nmcli con down "<connection-name>" && sudo nmcli con up "<connection-name>"
+```
+
+```
+nmcli
+```
+
+**Note:** `sudo systemctl restart NetworkManager` will add the new config, but will not remove the old, which is not ideal. This is why we are running the `up` and `down` commands for the connection. You could also reboot your pi.
+{:.warning}

@@ -53,6 +53,7 @@ defaults:
       path: "projects"
     values:
       layout: "article"
+      show_author_profile: false
       sidebar:
         cat: [knowledge, projects]
       aside:
@@ -63,6 +64,7 @@ defaults:
       path: "knowledge"
     values:
       layout: "article"
+      show_author_profile: false
       sidebar:
         cat: [knowledge, projects]
       aside:
