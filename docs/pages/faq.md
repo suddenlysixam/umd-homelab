@@ -7,7 +7,7 @@ key: page-faq
 
 1. [What is Homelabbing?](/meetings/past_meetings/2024-11-04-meeting)
 1. How do I join?
-    - Join the club on TerpLink (coming soon!)
+    - Join the club on [TerpLink](https://terplink.umd.edu/organization/homelab-club)
     - Join the club [Discord](/discord)
     - Attend one of our [upcoming meetings](/meetings)
 1. When is the next meeting?
