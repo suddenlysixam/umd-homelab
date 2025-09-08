@@ -2,7 +2,7 @@ Megan Steeley:
   name: Megan Steeley
   role: advisor
   url: https://www.umiacs.umd.edu/our-experts/staff/megan-steeley
-  avatar: https://www.umiacs.umd.edu/sites/default/files/styles/optimized/public/people/Steeley%2C%20Megan.jpg?itok=NdBvDhp-
+  avatar: assets/images/avatars/megan-steeley.jpg
   bio: System Administrator and Technical Students Program Coordinator at the University of Maryland Institute for Advanced Computer Studies (UMIACS)
   linkedin: megdorkable
   github: suddenlysixam
@@ -10,7 +10,7 @@ Megan Steeley:
 Joe Ridge:
   name: Joe Ridge
   url: https://www.umiacs.umd.edu/our-experts/staff/joe-ridge
-  avatar: https://www.umiacs.umd.edu/sites/default/files/styles/optimized/public/IMG_9870.jpeg?itok=EAAm0Qj6
+  avatar: assets/images/avatars/joe-ridge.jpg
   bio: Assistant Director, Technical Students Program at the University of Maryland Institute for Advanced Computer Studies (UMIACS)
   linkedin: edward-ridge-979a6a5b
   github: ridge-umiacs
@@ -18,7 +18,7 @@ Joe Ridge:
 Stephen Eide:
   name: Stephen Eide
   url: https://www.umiacs.umd.edu/our-experts/staff/stephen-eide
-  avatar: https://www.umiacs.umd.edu/sites/default/files/styles/optimized/public/Eide%2C%20Stephen%20cropped%20for%20UMIACS%20site.jpg?itok=b4poT9NM
+  avatar: assets/images/avatars/stephen-eide.jpg
   bio: Systems Engineer at the University of Maryland Institute for Advanced Computer Studies (UMIACS)
 
 Nick Curtis:
@@ -42,5 +42,8 @@ Jason Pang:
 Clara Gong:
   name: Clara Gong
   role: Developer
+  bio: "UMD CS '26"
+  avatar: assets/images/avatars/clara-gong.jpg
   url: authors/clara-gong
+  linkedin: clara-gong
   # github:
