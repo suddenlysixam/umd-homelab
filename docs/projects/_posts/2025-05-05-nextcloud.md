@@ -3,6 +3,8 @@ title: "Nextcloud"
 date: 2025-05-05
 modify_date: 2025-05-05
 cover: /assets/images/covers/2025-05-05_nextcloud.png
+redirect_to:
+  - /2025/05/05/meeting
 ---
 
 # Prerequisites
