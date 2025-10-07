@@ -5,7 +5,7 @@ permalink: /faq
 key: page-faq
 ---
 
-1. [What is Homelabbing?](/meetings/past_meetings/2024-11-04-meeting)
+1. [What is Homelabbing?](/2025/09/16/meeting)
 1. How do I join?
     - Join the club on [TerpLink](https://terplink.umd.edu/organization/homelab-club)
     - Join the club [Discord](/discord)
@@ -16,7 +16,7 @@ key: page-faq
 1. Is there documentation or a wiki about projects the club has done in the past?
     - See [documentation](/docs)
 1. What equipment does the club use? (or if you want to repeat a project that the club has done at home)
-    - [Project: Installing Raspberry Pi OS](/meetings/past_meetings/2024-12-02-meeting)
+    - [Project: Installing Raspberry Pi OS](/2024/12/02/meeting)
 
 
 #### *Do you have an idea for a future topic or project? [Send us your project ideas!]({{"/ideas" | relative_url}})*
