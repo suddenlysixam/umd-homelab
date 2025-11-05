@@ -1,5 +1,5 @@
 ---
-title: "Remote Access"
+title: "Remote Access via SSH"
 date: 2025-02-10
 modify_date: 2025-02-10
 tags: network
