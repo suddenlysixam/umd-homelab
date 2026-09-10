@@ -1,0 +1,29 @@
+.sidebar a[aria-current="page"] {
+  color: var(--sl-color-accent-high) !important;
+  background: var(--sl-color-accent-low);
+  border-left: 3px solid var(--sl-color-accent);
+}
+
+.sidebar a[aria-current="page"] * {
+  color: var(--sl-color-white) !important;
+}
+
+:root[data-theme='light'] nav.sidebar,
+:root[data-theme='light'] .sidebar-pane,
+:root[data-theme='light'] .right-sidebar {
+  background: var(--custom-sidebar-bg) !important;
+  border-color: #c8dcd8 !important;
+}
+
+:root[data-theme='light'] .sidebar a[aria-current='page'] {
+  background: rgb(from var(--sl-color-accent) r g b / 0.18);
+  border-left: 3px solid var(--sl-color-accent);
+}
+
+:root[data-theme='light'] .sl-badge.default,
+:root[data-theme='light'] .sl-badge.success,
+:root[data-theme='light'] [data-shb-badge-variant="success"] {
+  background: var(--sl-color-green-high);
+  color: var(--sl-color-black);
+  border-color: var(--sl-color-green-high);
+}

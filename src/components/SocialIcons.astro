@@ -1,0 +1,105 @@
+---
+import DefaultSocialIcons from "@astrojs/starlight/components/SocialIcons.astro";
+// @ts-expect-error Provided by starlight-ui-tweaks integration at runtime.
+import config from "virtual:starlight-ui-tweaks";
+import { Icon } from "astro-icon/components";
+import { customSocialLinks } from "../../config/social.mjs";
+
+type NavbarLink = { label: string; href: string };
+
+function getLocaleConfig<T = unknown>(
+  value: Record<string, unknown> | undefined,
+  locale: string | undefined,
+  key: string,
+): T | undefined {
+  if (!value || typeof value !== "object") return undefined;
+
+  const rootValue = value[key] as T | undefined;
+  const locales = value.locales as Record<string, Record<string, unknown>> | undefined;
+
+  if (!locale || !locales) return rootValue;
+
+  const directLocaleValue = locales[locale]?.[key] as T | undefined;
+  if (directLocaleValue !== undefined) return directLocaleValue;
+
+  const baseLocale = locale.split("-")[0];
+  const baseLocaleValue = locales[baseLocale]?.[key] as T | undefined;
+  if (baseLocaleValue !== undefined) return baseLocaleValue;
+
+  return rootValue;
+}
+
+const currentLocale = Astro.currentLocale;
+const tweaksConfig = config as {
+  navbarLinks?: NavbarLink[];
+  footer?: { showSocialIcons?: boolean };
+  locales?: Record<string, { navbarLinks?: NavbarLink[] }>;
+};
+
+const navbarLinks =
+  getLocaleConfig<NavbarLink[]>(tweaksConfig as Record<string, unknown>, currentLocale, "navbarLinks") ?? [];
+const showSocialIcons = !tweaksConfig?.footer?.showSocialIcons;
+---
+
+<div class={`social-icons-extended ${showSocialIcons ? "" : "social-icons-hidden"}`}>
+  {
+    navbarLinks.length !== 0 && (
+      <div class="custom-links">
+        {navbarLinks.map((link: NavbarLink) => (
+          <a href={link.href} class="custom-link">
+            {link.label}
+          </a>
+        ))}
+      </div>
+    )
+  }
+  {showSocialIcons && <DefaultSocialIcons />}
+  {
+    customSocialLinks.map((link) => (
+      <a href={link.href} rel={link.rel} class="custom-social-icon sl-flex" aria-label={link.label} title={link.label}>
+        <Icon name={link.icon} aria-hidden="true" />
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .social-icons-extended {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .custom-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .custom-link {
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+    font-size: var(--sl-text-sm);
+    font-weight: 500;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .custom-link:hover {
+    opacity: 0.66;
+  }
+
+  .custom-links::after {
+    content: "";
+    height: 2rem;
+    border-inline-end: 1px solid var(--sl-color-gray-5);
+  }
+
+  @media (width < 800px) {
+    .social-icons-hidden .custom-links::after {
+      content: none;
+      border: 0;
+    }
+  }
+</style>

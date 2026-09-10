@@ -1,0 +1,23 @@
+:root[data-theme='light'] .sidebar a[aria-current='page'] {
+  background: #f8dfe2;
+  color: #7a0019 !important;
+  border-left: 3px solid #c8102e;
+}
+
+:root[data-theme='light'] nav.sidebar,
+:root[data-theme='light'] .sidebar-pane,
+:root[data-theme='light'] .right-sidebar {
+  background: #fdf2f2 !important;
+  /* background: #f7e9ea; */
+  border-inline-end: 1px solid #f2d6d9;
+}
+
+:root[data-theme='light'] nav.sidebar a,
+:root[data-theme='light'] .right-sidebar a {
+  color: #5c2a2f;
+}
+
+:root[data-theme='light'] nav.sidebar a:hover,
+:root[data-theme='light'] .right-sidebar a:hover {
+  color: #c8102e;
+}

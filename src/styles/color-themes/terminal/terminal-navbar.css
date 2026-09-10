@@ -1,0 +1,82 @@
+/* default/dark theme nav bar */
+.title-group {
+    gap: 0.7rem;
+}
+
+.site-subtitle {
+  font-size: 0.75rem;
+  font-weight: 250;
+  letter-spacing: 0.02em;
+  color: var(--sl-color-accent-high);
+  opacity: 0.7;
+  /* top: -0.1em; */
+}
+
+/* top nav bar links */
+a.custom-link {
+  font-size: 1rem;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.15s ease, text-shadow 0.15s ease;
+}
+
+/* a.custom-link:hover {
+  color: var(--sl-color-accent-high);
+  text-shadow: 0 0 6px rgb(from var(--sl-color-accent) r g b / 0.25);
+} */
+
+/* light theme nav bar */
+:root[data-theme='light'] header.header {
+    background: var(--custom-header-bar);
+}
+
+/* :root[data-theme='light'] header.header, */
+:root[data-theme='light'] header.header a,
+:root[data-theme='light'] header.header button {
+  /* color: #eefdfb; */
+  color: var(--sl-color-gray-7);
+}
+
+:root[data-theme='light'] header.header a:hover,
+:root[data-theme='light'] header.header button:hover {
+  color: var(--sl-color-accent-low);
+}
+
+:root[data-theme='light'] header.header button[aria-label="Search"] {
+  color: var(--sl-color-accent-high);
+}
+
+:root[data-theme='light'] header.header button:hover[aria-label="Search"] {
+  color: var(--sl-color-accent);
+}
+
+:root[data-theme='light'] .site-subtitle {
+  font-weight: 350;
+  color: var(--sl-color-green-low);
+}
+
+:root[data-theme='light'] .pagefind-ui,
+:root[data-theme='light'] .pagefind-ui__result-title,
+:root[data-theme='light'] .pagefind-ui__result-link {
+  color: var(--sl-color-gray-1) !important;
+}
+
+:root[data-theme='light'] .pagefind-ui__result-excerpt {
+  color: var(--sl-color-gray-3) !important;
+}
+
+:root[data-theme='light'] .pagefind-ui__message {
+  color: var(--sl-color-gray-2) !important;
+}
+
+:root[data-theme='light'] .pagefind-ui {
+  background: var(--sl-color-gray-7) !important;
+}
+
+.site-title img {
+  filter: invert(0.5) sepia(0.8) saturate(2) hue-rotate(100deg);
+  margin-right: -0.5rem;
+}
+
+:root[data-theme='light'] .site-title img {
+  filter: invert(0.5) sepia(1) saturate(2) hue-rotate(130deg);
+}

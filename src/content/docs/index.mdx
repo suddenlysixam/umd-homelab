@@ -1,0 +1,49 @@
+---
+title: Build I.T. Club @ UMD
+description: Building IT infrastructure & knowledge, B.I.T. by B.I.T.
+template: splash # Remove or comment out this line to display the site sidebar on this page.
+hero:
+  tagline: Building IT infrastructure & knowledge, B.I.T. by B.I.T.
+  image:
+    file: ../../assets/favicon.svg
+  actions:
+    - text: Join our Next Meeting
+      link: /meetings
+      icon: right-arrow
+    - text: Join us on Discord
+      link: /discord
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Next steps
+
+<CardGrid stagger>
+	{/* <Card title="Update content" icon="pencil">
+		Edit `src/content/docs/index.mdx` to see this page change.
+	</Card>
+	<Card title="Change page layout" icon="document">
+		Delete `template: splash` in `src/content/docs/index.mdx` to display a
+		sidebar on this page.
+	</Card>
+	<Card title="Add new content" icon="add-document">
+		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	</Card>
+	<Card title="Configure your site" icon="setting">
+		Edit your `sidebar` and other config in `astro.config.mjs`.
+	</Card> */}
+	<Card title="Read the docs" icon="open-book">
+		Learn more in our [documentation](/guides).
+	</Card>
+	<Card title="Check out our past meetings" icon="open-book">
+		Find slides and information about our past meetings on the [Meetings page](/meetings).
+	</Card>
+	<Card title="Join us on TerpLink" icon="pencil">
+		Sign up for the club on [TerpLink](/terplink).
+	</Card>
+	<Card title="Contribute to this website" icon="setting">
+		Contributions to this website are made as [pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests) on [GitHub](/github). Instructions are included in the README.
+	</Card>
+</CardGrid>

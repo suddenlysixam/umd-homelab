@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import { ShowcaseText } from "starlight-showcases";
+import { withBase } from "../../config/basePath.mjs";
+
+const { directory } = Astro.props;
+
+const pages = await getCollection("docs", ({ id, data }) => {
+  return id.startsWith(`${directory}/`) && !data.draft;
+});
+
+const entries = pages
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+  .map((page) => ({
+    title: page.data.title,
+    description: page.data.description ?? "",
+    href: withBase(`/${page.id.replace(/\/index$/, "")}/`),
+  }));
+---
+
+<ShowcaseText entries={entries} />

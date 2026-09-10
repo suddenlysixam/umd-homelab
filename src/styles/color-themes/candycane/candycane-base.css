@@ -1,0 +1,25 @@
+:root[data-theme='light'] {
+  --sl-color-accent-low: #fde8e8;
+  --sl-color-accent: #c8102e;
+  --sl-color-accent-high: #7a0019;
+
+  --sl-color-white: #1a1a1a;
+
+  --sl-color-gray-1: #2b2b2b;
+  --sl-color-gray-2: #4a4a4a;
+  --sl-color-gray-3: #6b6b6b;
+  --sl-color-gray-4: #9a9a9a;
+  --sl-color-gray-5: #cfcfcf;
+  --sl-color-gray-6: #e9e9e9;
+  --sl-color-gray-7: #f7f4f2;
+
+  --sl-color-black: #fbf7f5;
+}
+
+/* :root[data-theme='light'] a {
+  color: #5c2a2f;
+} */
+
+/* :root[data-theme='light'] a:hover {
+  color: #e89827;
+} */

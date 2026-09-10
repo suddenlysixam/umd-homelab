@@ -1,0 +1,150 @@
+---
+import { Icon } from "astro-icon/components";
+import { withBase } from "../../config/basePath.mjs";
+import AddToCalendarButton from "./AddToCalendarButton.astro";
+
+const { frontmatter } = Astro.props;
+
+const meetingDate = new Date(frontmatter.date);
+const now = new Date();
+const isUpcoming = now <= meetingDate;
+
+function ordinal(day: number) {
+  if ([11, 12, 13].includes(day % 100)) return `${day}th`;
+
+  switch (day % 10) {
+    case 1:
+      return `${day}st`;
+    case 2:
+      return `${day}nd`;
+    case 3:
+      return `${day}rd`;
+    default:
+      return `${day}th`;
+  }
+}
+
+const weekday = meetingDate.toLocaleDateString("en-US", { weekday: "long" });
+const month = meetingDate.toLocaleDateString("en-US", { month: "long" });
+const day = ordinal(meetingDate.getDate());
+const year = meetingDate.getFullYear();
+
+const formattedDate = `${weekday}, ${month} ${day}, ${year}`;
+
+const formattedTime = meetingDate.toLocaleTimeString("en-US", {
+  hour: "numeric",
+  minute: "2-digit",
+});
+
+const endDateObj = new Date(meetingDate.getTime() + 60 * 60 * 1000);
+
+const startDate = meetingDate.toISOString().slice(0, 10);
+const endDate = endDateObj.toISOString().slice(0, 10);
+
+const startTime = meetingDate.toTimeString().slice(0, 5);
+const endTime = endDateObj.toTimeString().slice(0, 5);
+
+const slidesUrl = frontmatter.slides ? withBase(frontmatter.slides) : undefined;
+---
+
+<section class="meeting-card">
+  <dl>
+    <div class="meeting-row">
+      <dt>
+        <Icon name="mdi:calendar" class="meeting-icon" />
+        When
+      </dt>
+      <dd>
+        {formattedDate}{isUpcoming && `, starting at ${formattedTime}`}
+      </dd>
+    </div>
+
+    {
+      isUpcoming && frontmatter.location && (
+        <div class="meeting-row">
+          <dt>
+            <Icon name="mdi:location-on-outline" class="meeting-icon" />
+            Location
+          </dt>
+          <dd>{frontmatter.location}</dd>
+        </div>
+      )
+    }
+
+    {
+      frontmatter.topic && (
+        <div class="meeting-row">
+          <dt>
+            <Icon name="mdi:text-subject" class="meeting-icon" />
+            Topic
+          </dt>
+          <dd>{frontmatter.topic}</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  {
+    isUpcoming && (
+      <div class="meeting-actions">
+        <AddToCalendarButton
+          name="Homelab Club at UMD Meeting"
+          description={frontmatter.topic ?? ""}
+          location={frontmatter.location ?? ""}
+          startDate={startDate}
+          endDate={endDate}
+          startTime={startTime}
+          endTime={endTime}
+          timeZone="America/New_York"
+        />
+      </div>
+    )
+  }
+</section>
+
+{
+  isUpcoming && frontmatter.rsvp && (
+    <>
+      <h3>RSVP</h3>
+      {/* <iframe src={frontmatter.rsvp} width="640" height="551" frameborder="0" marginheight="0" marginwidth="0">
+        Loading…
+      </iframe> */}
+      <div class="rsvp-frame">
+        <iframe src={frontmatter.rsvp} title="Meeting RSVP form" loading="lazy">
+          Loading…
+        </iframe>
+      </div>
+    </>
+  )
+}
+
+{
+  slidesUrl && (
+    <section class="slides-section">
+      <h3>Slides</h3>
+
+      <div class="slides-actions">
+        <a href={slidesUrl} target="_blank" rel="noopener noreferrer">
+          Open meeting slides
+        </a>
+      </div>
+
+      <details class="slides-preview-wrapper">
+        <summary>Preview slides</summary>
+
+        <iframe class="slides-preview" src={slidesUrl} title="Meeting slides preview" loading="lazy" />
+      </details>
+    </section>
+  )
+}
+
+{
+  frontmatter.project && (
+    <>
+      <h3>Project Page</h3>
+      <p>
+        <a href={frontmatter.project}>Project link</a>
+      </p>
+    </>
+  )
+}

@@ -1,0 +1,25 @@
+/* default/dark theme code */
+pre {
+  background: var(--sl-color-gray-7);
+  border: 1px solid rgb(from var(--sl-color-accent) r g b / 0.15);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 1px rgb(from var(--sl-color-accent) r g b / 0.08);
+}
+
+code {
+  color: var(--sl-color-accent-high);
+}
+
+/* inline code */
+:not(pre) > code {
+  background: rgb(from var(--sl-color-accent) r g b / 0.1);
+  color: var(--sl-color-accent-high);
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.25rem;
+}
+
+/* light theme code */
+:root[data-theme='light'] pre {
+  border: 1px solid rgb(from var(--sl-color-accent) r g b / 0.22);
+  box-shadow: none;
+}
