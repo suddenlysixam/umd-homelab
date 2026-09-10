@@ -43,5 +43,6 @@ export const custom_starlightSidebarTopics =
         exclude: [
             '/meetings', '/meetings/**/*',
             '/tags', '/tags/**/*',
+            '/reference', '/reference/**/*',
         ],
     });
