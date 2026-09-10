@@ -21,13 +21,15 @@ export const custom_starlightUiTweaks =
             title: "Resources",
             links: [
                 { label: "Guides", href: withBase("/guides") },
-                { label: "Reference", href: withBase("/reference") },
+                // { label: "Reference", href: withBase("/reference") },
             ],
             },
             thirdColumn: {
-            title: "Support",
+            title: "Social",
             links: [
                 { label: "Discord", href: withBase("/discord") },
+                { label: "TerpLink", href: withBase("/terplink") },
+                { label: "LinkedIn", href: withBase("/linkedin") },
             ],
             },
             fourthColumn: {
