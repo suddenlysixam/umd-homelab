@@ -15,7 +15,7 @@ import { custom_starlightAnnouncement } from './config/plugins/custom_starlightA
 import { custom_starlightSidebarTopics } from './config/plugins/custom_starlightSidebarTopics.mjs';
 
 // Custom configurations
-import { BASE_PATH } from './config/basePath.mjs';
+// import { BASE_PATH } from './config/basePath.mjs';
 import { custom_redirects } from './config/redirects.mjs';
 import { authors } from './config/authors.mjs';
 import { social } from './config/social.mjs';
@@ -30,7 +30,7 @@ export default defineConfig({
         },
     },
     site: 'https://suddenlysixam.club',
-    base: BASE_PATH,
+    // base: BASE_PATH,
     redirects: custom_redirects,
     integrations: [starlight({
         title: 'Build I.T.',
