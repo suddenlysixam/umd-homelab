@@ -1,0 +1,41 @@
+---
+interface Props {
+  name: string;
+  description?: string;
+  location?: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+  timeZone?: string;
+}
+
+const {
+  name,
+  description = "",
+  location = "",
+  startDate,
+  endDate,
+  startTime,
+  endTime,
+  timeZone = "America/New_York",
+} = Astro.props;
+---
+
+<script type="module" src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2"></script>
+
+<add-to-calendar-button
+  name={name}
+  description={description}
+  location={location}
+  startDate={startDate}
+  endDate={endDate}
+  startTime={startTime}
+  endTime={endTime}
+  timeZone={timeZone}
+  options="'Apple','Google','iCal','Outlook.com','Yahoo','MicrosoftTeams','Microsoft365'"
+  buttonStyle="default"
+  size="4"
+  lightMode="bodyScheme"
+  hideCheckmark
+  pastDateHandling="hide"></add-to-calendar-button>

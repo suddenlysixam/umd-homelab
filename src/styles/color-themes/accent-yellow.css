@@ -1,0 +1,21 @@
+:root[data-theme='light'] {
+  /* --color-umd-gold: #f5c400; */
+  --color-umd-gold: #ffe08a;
+}
+
+:root[data-theme='light'] header.header {
+  border-bottom: 2px solid #ffcd00;
+}
+
+:root[data-theme='light'] button[data-open-modal] kbd {
+  background: #ffe08a;
+  color: #7a0019 !important;
+}
+
+:root[data-theme='light'] .sl-badge.default,
+:root[data-theme='light'] .sl-badge.success,
+:root[data-theme='light'] [data-shb-badge-variant="success"] {
+  background: var(--color-umd-gold);
+  color: #7a0019;
+  border: 1px solid #f1d38a;
+}

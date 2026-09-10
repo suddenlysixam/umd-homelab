@@ -1,0 +1,36 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(4rem, 10vw, 8rem);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 8% 10% auto auto;
+  width: 28rem;
+  height: 28rem;
+  background: radial-gradient(
+    circle,
+    rgb(from var(--sl-color-accent) r g b / 0.16),
+    rgb(from var(--sl-color-accent) r g b / 0.04) 42%,
+    transparent 70%
+  );
+  filter: blur(18px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* .hero h1 {
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 24px rgba(61, 220, 132, 0.12);
+} */
+
+/* .hero .tagline {
+  color: var(--sl-color-gray-2);
+  font-size: 1.1rem;
+} */
+
+.hero img {
+  filter: drop-shadow(0 0 24px rgb(from var(--sl-color-accent) r g b / 0.16));
+}

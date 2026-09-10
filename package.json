@@ -1,0 +1,30 @@
+{
+  "name": "umd-homelab",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.41.7",
+    "@iconify-json/game-icons": "^1.2.4",
+    "@iconify-json/line-md": "^1.2.16",
+    "@iconify-json/mdi": "^1.2.3",
+    "add-to-calendar-button-react": "^2.14.0",
+    "astro": "^7.2.2",
+    "astro-icon": "^1.1.5",
+    "sharp": "^0.34.2",
+    "starlight-announcement": "^1.1.0",
+    "starlight-base-path": "^0.1.1",
+    "starlight-blog": "^0.26.1",
+    "starlight-heading-badges": "^0.7.0",
+    "starlight-showcases": "^0.3.2",
+    "starlight-sidebar-topics": "^0.7.1",
+    "starlight-tags": "^1.0.1",
+    "starlight-ui-tweaks": "^0.2.2"
+  }
+}

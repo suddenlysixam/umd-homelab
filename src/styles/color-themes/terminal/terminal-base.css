@@ -1,0 +1,85 @@
+/* dark theme */
+:root {
+  --sl-color-accent-low: #163d2a;
+  --sl-color-accent: #3ddc84;
+  --sl-color-accent-high: #86efac;
+
+  --sl-color-white: #e6f7ec;
+
+  --sl-color-gray-1: #d9efe3;
+  --sl-color-gray-2: #a7c3b4;
+  --sl-color-gray-3: #789786;
+  --sl-color-gray-4: #4e6b5c;
+  --sl-color-gray-5: #2e4238;
+  --sl-color-gray-6: #1c2a23;
+  --sl-color-gray-7: #0e1511;
+
+  --sl-color-black: #0b0f0c;
+
+  --sl-color-red-low: #5a1830;
+  --sl-color-red: #ff5f8f;
+  --sl-color-red-high: #ffd6e3;
+
+  --sl-color-orange-low: #5a4313;
+  --sl-color-orange: #ffc857;
+  --sl-color-orange-high: #fff0c2;
+
+  --sl-color-green-low: #153d2b;
+  --sl-color-green: #3ddc84;
+  --sl-color-green-high: #b7f7cf;
+
+  --sl-color-blue-low: #10214a;
+  --sl-color-blue: #4f7cff;
+  --sl-color-blue-high: #c7d5ff;
+
+  /* --sl-color-purple-low: #2b1746;
+  --sl-color-purple: #a06cff;
+  --sl-color-purple-high: #e0ccff; */
+}
+
+/* light theme */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #cdece7;
+  --sl-color-accent: #16877c;
+  --sl-color-accent-high: #0d4f49;
+
+  --sl-color-white: #14201d;
+
+  --sl-color-gray-1: #1d2b28;
+  --sl-color-gray-2: #314340;
+  --sl-color-gray-3: #526663;
+  --sl-color-gray-4: #7f9591;
+  --sl-color-gray-5: #c7d8d5;
+  --sl-color-gray-6: #dfe9e7;
+  --sl-color-gray-7: #f4f8f7;
+
+  --sl-color-black: #fbfcfc;
+
+  --sl-color-red-low: #ffd9e2;
+  --sl-color-red: #d7265d;
+  --sl-color-red-high: #7a1033;
+
+  --sl-color-orange-low: #fff1c7;
+  --sl-color-orange: #c47a00;
+  --sl-color-orange-high: #a68d02;
+
+  --sl-color-green-low: #c6fbf2;
+  --sl-color-green: #00a896;
+  --sl-color-green-high: #00796f;
+
+  --sl-color-blue-low: #dcecf8;
+  --sl-color-blue: #4f7fb8;
+  --sl-color-blue-high: #274b7a;
+
+  --sl-color-purple-low: #eadcff;
+  --sl-color-purple: #7b3fc6;
+  --sl-color-purple-high: #5508a7;
+
+  --custom-header-bar: linear-gradient(to right, #1b6e67 30%, #165b56);
+  --custom-sidebar-bg: #e2eeeb;
+}
+
+::selection {
+  background: var(--sl-color-accent-low);
+  /* color: var(--sl-color-white); */
+}

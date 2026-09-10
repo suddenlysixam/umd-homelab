@@ -1,0 +1,43 @@
+tags:
+  network:
+    label: "Network"
+    description: "Network related topics"
+    color: "#10b981"
+    icon: "🌐"
+
+  # hardware:
+  #   label: "Hardware"
+  #   description: "Hardware related topics"
+  #   color: "#f87171"
+  #   icon: "💻"
+
+  # linux:
+  #   label: "Linux"
+  #   description: "Linux related topics"
+  #   color: "#8b5cf6"
+  #   icon: "🐧"
+
+  # getting-started:
+  #   label: "Getting Started"
+  #   description: "Essential first steps"
+  #   color: "#22c55e"
+  #   icon: "🚀"
+  #   priority: 100
+
+  # components:
+  #   label: "Components"
+  #   description: "UI building blocks"
+  #   color: "#3b82f6"
+  #   icon: "🧩"
+
+  # advanced:
+  #   label: "Advanced"
+  #   description: "For experienced users"
+  #   color: "#f59e0b"
+  #   icon: "⚡"
+  #   difficulty: advanced
+  #   prerequisites:
+  #     - getting-started
+
+defaults:
+  color: "#6b7280"

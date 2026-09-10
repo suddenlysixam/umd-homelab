@@ -1,0 +1,30 @@
+@media (min-width: 72rem) {
+  /* Right TOC rail width: grows with viewport but stays within bounds. */
+  :root {
+    --sl-right-sidebar-max-width: clamp(14rem, 24vw, 34rem);
+    --sl-content-width: clamp(32rem, 52vw, 72rem);
+  }
+
+  .right-sidebar-container {
+    width: min(
+      calc(var(--sl-sidebar-width) + (100% - var(--sl-content-width) - var(--sl-sidebar-width)) / 2),
+      var(--sl-right-sidebar-max-width)
+    ) !important;
+  }
+
+  .right-sidebar {
+    width: min(100%, var(--sl-right-sidebar-max-width)) !important;
+  }
+
+  .right-sidebar-panel .sl-container {
+    width: calc(100% - 2 * var(--sl-sidebar-pad-x)) !important;
+    max-width: calc(var(--sl-right-sidebar-max-width) - 2 * var(--sl-sidebar-pad-x)) !important;
+  }
+
+  /* Expand main content to reclaim space freed by the capped right sidebar. */
+  [data-has-sidebar][data-has-toc] .main-pane {
+    width: calc(100% - var(--sl-right-sidebar-max-width)) !important;
+    /* Re-center content; Starlight sets this to `auto 0` (right-flush) when a TOC is present. */
+    --sl-content-margin-inline: auto 0 !important;
+  }
+}

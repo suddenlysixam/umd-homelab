@@ -1,0 +1,52 @@
+:root[data-theme='light'] header.header {
+  background: #c8102e;
+  border-bottom: 2px solid #f38395;
+}
+
+:root[data-theme='light'] header.header,
+:root[data-theme='light'] header.header a,
+:root[data-theme='light'] header.header button {
+  color: white;
+}
+
+:root[data-theme='light'] .site-subtitle {
+    font-weight: 350;
+    color: var(--sl-color-black);
+    opacity: 1;
+}
+
+:root[data-theme='light'] button[data-open-modal] {
+  background: #fff;
+  color: #1a1a1a !important;
+  border: none;
+}
+
+:root[data-theme='light'] button[data-open-modal] kbd {
+  color: #7a0019 !important;
+}
+
+/* search */
+:root[data-theme='light'] .pagefind-ui {
+  color: #2b1a1d;
+}
+
+:root[data-theme='light'] .pagefind-ui__search-input {
+  color: #2b1a1d;
+  background: #fff;
+}
+
+:root[data-theme='light'] .pagefind-ui__search-input::placeholder {
+  color: #8a6a70;
+}
+
+:root[data-theme='light'] .pagefind-ui__result {
+  color: #3a1f23;
+}
+
+:root[data-theme='light'] .pagefind-ui__result-link {
+  color: var(--sl-color-accent-high) !important;
+}
+
+:root[data-theme='light'] .pagefind-ui__result-excerpt {
+  color: #5a3a3f;
+}
