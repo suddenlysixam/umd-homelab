@@ -34,6 +34,7 @@ const formattedDate = `${weekday}, ${month} ${day}, ${year}`;
 const formattedTime = meetingDate.toLocaleTimeString("en-US", {
   hour: "numeric",
   minute: "2-digit",
+  timeZone: "America/New_York"
 });
 
 const endDateObj = new Date(meetingDate.getTime() + 60 * 60 * 1000);
