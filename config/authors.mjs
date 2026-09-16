@@ -35,4 +35,14 @@ export const authors = {
         name: 'Anson Cook',
         title: 'Treasurer',
     },
+    Alvin_Lin: {
+        name: 'Alvin Lin',
+        title: 'Member',
+        // picture: '/images/avatars/alvin-lin.jpg'
+    },
+    Vincent_Barilaro: {
+        name: 'Vincent Barilaro',
+        title: 'Member',
+        // picture: '/images/avatars/vincent-barilaro.jpg'
+    }
 }

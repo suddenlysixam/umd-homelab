@@ -32,8 +32,13 @@ export default defineConfig({
     site: 'https://suddenlysixam.club',
     // base: BASE_PATH,
     redirects: custom_redirects,
+    i18n: {
+        locales: ["en"],
+        defaultLocale: "en",
+    },
     integrations: [starlight({
         title: 'Build I.T.',
+        disable404Route: true,
         logo: {
             src: './src/assets/favicon.svg',
         },
