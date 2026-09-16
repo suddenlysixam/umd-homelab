@@ -17,14 +17,17 @@
     "add-to-calendar-button-react": "^2.14.0",
     "astro": "^7.2.2",
     "astro-icon": "^1.1.5",
-    "sharp": "^0.34.2",
+    "sharp": "^0.35.4",
     "starlight-announcement": "^1.1.0",
     "starlight-base-path": "^0.1.1",
-    "starlight-blog": "^0.26.1",
+    "starlight-blog": "^0.29.0",
     "starlight-heading-badges": "^0.7.0",
     "starlight-showcases": "^0.3.2",
     "starlight-sidebar-topics": "^0.7.1",
     "starlight-tags": "^1.0.1",
     "starlight-ui-tweaks": "^0.2.2"
+  },
+  "allowScripts": {
+    "esbuild": true
   }
 }
