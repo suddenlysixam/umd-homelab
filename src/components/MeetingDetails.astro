@@ -8,6 +8,7 @@ const { frontmatter } = Astro.props;
 const meetingDate = new Date(frontmatter.date);
 const now = new Date();
 const isUpcoming = now <= meetingDate;
+const timeZone = "America/New_York";
 
 function ordinal(day: number) {
   if ([11, 12, 13].includes(day % 100)) return `${day}th`;
@@ -34,16 +35,34 @@ const formattedDate = `${weekday}, ${month} ${day}, ${year}`;
 const formattedTime = meetingDate.toLocaleTimeString("en-US", {
   hour: "numeric",
   minute: "2-digit",
-  timeZone: "America/New_York",
+  timeZone: timeZone,
 });
 
 const endDateObj = new Date(meetingDate.getTime() + 60 * 60 * 1000);
 
-const startDate = meetingDate.toISOString().slice(0, 10);
-const endDate = endDateObj.toISOString().slice(0, 10);
+function dateInTimeZone(date: Date) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
 
-const startTime = meetingDate.toTimeString().slice(0, 5);
-const endTime = endDateObj.toTimeString().slice(0, 5);
+function timeInTimeZone(date: Date) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).format(date);
+}
+
+const startDate = dateInTimeZone(meetingDate);
+const endDate = dateInTimeZone(endDateObj);
+
+const startTime = timeInTimeZone(meetingDate);
+const endTime = timeInTimeZone(endDateObj);
 
 const slidesUrl = frontmatter.slides ? withBase(frontmatter.slides) : undefined;
 ---
@@ -89,14 +108,14 @@ const slidesUrl = frontmatter.slides ? withBase(frontmatter.slides) : undefined;
     isUpcoming && (
       <div class="meeting-actions">
         <AddToCalendarButton
-          name="Homelab Club at UMD Meeting"
+          name="Build I.T. Club at UMD Meeting"
           description={frontmatter.topic ?? ""}
           location={frontmatter.location ?? ""}
           startDate={startDate}
           endDate={endDate}
           startTime={startTime}
           endTime={endTime}
-          timeZone="America/New_York"
+          timeZone={timeZone}
         />
       </div>
     )
