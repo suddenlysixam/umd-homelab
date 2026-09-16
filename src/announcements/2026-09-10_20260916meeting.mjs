@@ -9,6 +9,6 @@ export default {
     text: 'Upcoming Meeting: Wednesday, Sep. 16th @ 5pm (Click to Read More)',
     href: withBase('/meetings/2026-09-16-meeting/'),
   },
-  startDate: '2026-09-10T00:00:00Z',
-  endDate: '2026-09-16T22:00:00Z',
+  startDate: '2026-09-10T00:00:00-04:00',
+  endDate: '2026-09-16T17:00:00-04:00',
 };
