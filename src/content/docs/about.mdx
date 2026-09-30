@@ -4,15 +4,17 @@ template: splash
 description: Learn more about our project and team.
 ---
 
+import AboutInfo from '../../components/AboutInfo.astro';
 import AuthorList from '../../components/AuthorList.astro';
+import { LinkCard } from '@astrojs/starlight/components';
 
-The Build I.T. Club at the University of Maryland exists to foster a hands-on learning environment where students can explore system administration, networking, virtualization, cybersecurity, self-hosting, and other IT-related skills. The club aims to build a supportive community where students of all skill levels can collaborate and experiment in a curiosity-driven environment, gaining practical, real-world experience that supports both academic growth and professional development. Through workshops, peer mentorship, and shared resources, the Build I.T. Club encourages innovation, self-reliance, and a deeper understanding of how computing systems work from the ground up.
+<AboutInfo />
 
-[FAQ](/faq)
+<a style="display: inline-block; margin-top: 1rem; font-weight: 600;"href="/faq">Frequently Asked Questions →</a>
 
 ## Who we are
 
-[View all presentation authors](/authors)
+<div style="margin-top: 3rem;"></div>
 
 ### Officers
 
@@ -21,3 +23,6 @@ The Build I.T. Club at the University of Maryland exists to foster a hands-on le
 ### Advisors
 
 <AuthorList authors={["Megan_Steeley"]} />
+
+<div style="margin-top: 3rem;"></div>
+<LinkCard title="View all presentation authors" href="/authors" />

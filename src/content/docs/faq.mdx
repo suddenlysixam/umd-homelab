@@ -4,11 +4,30 @@ template: splash
 description: Frequently Asked Questions
 ---
 
-1. How do I join?
-    - Join the club on [TerpLink](https://terplink.umd.edu/organization/homelab-club)
-    - Join the club [Discord](/discord)
-    - Attend one of our [upcoming meetings](/meetings)
-1. Is there documentation or a wiki about projects the club has done in the past?
-    - See our previous project [guides](/guides)
-1. What equipment does the club use? (or if you want to repeat a project that the club has done at home)
-    - [Project: Installing Raspberry Pi OS](/404)
+import FAQuestion from '../../components/FAQuestion.astro';
+import FAQList from '../../components/FAQList.astro';
+
+
+<FAQList>
+    <FAQuestion question="How do I join?">
+        There are several ways to get involved:
+
+        <ul>
+            <li>Join the club on [TerpLink](/terplink)</li>
+            <li>Join our [Discord](/discord)</li>
+            <li>Attend one of our [upcoming meetings](/meetings)</li>
+        </ul>
+    </FAQuestion>
+
+    <FAQuestion question="What do I need to participate? Do I need any specific equipment?">
+        No equipment or prior experience is required to join the club. For club projects, any required equipment will be provided (first RSVP, first served).
+    </FAQuestion>
+
+    <FAQuestion question="What equipment does the club use?">
+        The club currently uses Raspberry Pi 4s.
+    </FAQuestion>
+
+    <FAQuestion question="Is there documentation or a wiki about projects the club has done in the past?">
+        Yes! See our previous [project guides](/guides).
+    </FAQuestion>
+</FAQList>
