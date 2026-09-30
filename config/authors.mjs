@@ -6,7 +6,12 @@ export const authors = {
         name: 'Megan Steeley',
         title: 'Advisor',
         picture: '/images/avatars/megan-steeley.jpg',
-        // url: ,
+        // url: '',
+        bio: 'System Administrator and Technical Students Program Coordinator at the University of Maryland Institute for Advanced Computer Studies (UMIACS)',
+        social: {
+            github: 'suddenlysixam',
+            linkedin: 'megdorkable',
+        }
     },
     Joe_Ridge: {
         name: 'Joe Ridge',
@@ -34,6 +39,7 @@ export const authors = {
     Anson_Cook: {
         name: 'Anson Cook',
         title: 'Treasurer',
+        picture: '/images/avatars/anson-cook.jpg'
     },
     Alvin_Lin: {
         name: 'Alvin Lin',

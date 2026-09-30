@@ -1,0 +1,28 @@
+---
+title: About
+template: splash
+description: Learn more about our project and team.
+---
+
+import AboutInfo from '../../components/AboutInfo.astro';
+import AuthorList from '../../components/AuthorList.astro';
+import { LinkCard } from '@astrojs/starlight/components';
+
+<AboutInfo />
+
+<a style="display: inline-block; margin-top: 1rem; font-weight: 600;"href="/faq">Frequently Asked Questions →</a>
+
+## Who we are
+
+<div style="margin-top: 3rem;"></div>
+
+### Officers
+
+<AuthorList authors={["Jason_Pang", "Anson_Cook"]} />
+
+### Advisors
+
+<AuthorList authors={["Megan_Steeley"]} />
+
+<div style="margin-top: 3rem;"></div>
+<LinkCard title="View all presentation authors" href="/authors" />

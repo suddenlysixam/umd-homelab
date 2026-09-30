@@ -1,0 +1,101 @@
+---
+import { getCollection } from "astro:content";
+import { authors } from "../../config/authors.mjs";
+
+type AuthorKey = keyof typeof authors;
+
+interface Props {
+  author: AuthorKey;
+}
+
+const { author } = Astro.props;
+
+const presentations = (await getCollection("docs"))
+  .filter((entry) => {
+    if (!entry.id.startsWith("meetings/")) return false;
+
+    const entryAuthors = entry.data.authors;
+
+    if (!entryAuthors) return false;
+
+    const authorList = Array.isArray(entryAuthors) ? entryAuthors : [entryAuthors];
+
+    return authorList.includes(author);
+  })
+  .sort((a, b) => {
+    const aDate = a.data.date?.getTime() ?? 0;
+    const bDate = b.data.date?.getTime() ?? 0;
+
+    return bDate - aDate;
+  });
+---
+
+<style>
+  .author-presentations {
+    margin-top: 1.5rem;
+  }
+
+  .author-presentations h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .presentation-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .presentation-card {
+    display: block;
+    padding: 1rem 1.25rem;
+
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .presentation-card:hover {
+    border-color: var(--sl-color-accent);
+  }
+
+  .presentation-title {
+    color: var(--sl-color-white);
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .presentation-meta {
+    margin-top: 0.25rem;
+    color: var(--sl-color-gray-2);
+    font-size: 0.9rem;
+  }
+</style>
+
+<section class="author-presentations">
+  <h2 id="presentations">Presentations</h2>
+
+  {
+    presentations.length > 0 ? (
+      <div class="presentation-list">
+        {presentations.map((presentation) => (
+          <a class="presentation-card" href={`/${presentation.id}/`}>
+            <div class="presentation-title">{presentation.data.topic ?? presentation.data.title}</div>
+
+            {presentation.data.date && (
+              <div class="presentation-meta">
+                {presentation.data.date.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </div>
+            )}
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p class="no-presentations">No presentations yet.</p>
+    )
+  }
+</section>

@@ -1,0 +1,186 @@
+---
+import { Icon } from "@astrojs/starlight/components";
+import { authors } from "../../config/authors.mjs";
+import type { Author, SocialLink } from "../types/author";
+
+type AuthorKey = keyof typeof authors;
+
+interface Props {
+  author: AuthorKey;
+}
+
+const { author } = Astro.props;
+const authorInfo: Author = authors[author];
+
+const socialLinks: SocialLink[] = [];
+
+if (authorInfo.social?.github) {
+  socialLinks.push({
+    label: "GitHub",
+    icon: "github",
+    href: `https://github.com/${authorInfo.social.github}`,
+  });
+}
+
+if (authorInfo.social?.linkedin) {
+  socialLinks.push({
+    label: "LinkedIn",
+    icon: "linkedin",
+    href: `https://www.linkedin.com/in/${authorInfo.social.linkedin}/`,
+  });
+}
+---
+
+<style>
+  .author-profile {
+    margin-bottom: 2.5rem;
+  }
+
+  .author-overview {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    /* margin-bottom: 3.5rem; */
+  }
+
+  .author-avatar {
+    display: grid;
+    place-items: center;
+
+    width: 8rem;
+    height: 8rem;
+    flex: 0 0 8rem;
+
+    border-radius: 50%;
+    background: var(--sl-color-accent-low);
+    border: 1px solid var(--sl-color-gray-5);
+    overflow: hidden;
+  }
+
+  .author-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .author-avatar span {
+    color: var(--sl-color-accent-high);
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .author-details {
+    min-width: 0;
+    transform: translateY(-0.6rem);
+  }
+
+  .author-details h1 {
+    margin: 0;
+  }
+
+  .author-title {
+    color: var(--sl-color-gray-2);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  /* .author-bio {
+    margin: 0.75rem 0 0;
+  } */
+
+  .author-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .author-socials a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+  }
+
+  .author-socials a:hover {
+    text-decoration: underline;
+  }
+
+  .author-socials :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  @media (max-width: 30rem) {
+    .author-overview {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .author-avatar {
+      width: 6rem;
+      height: 6rem;
+      flex-basis: 6rem;
+    }
+  }
+</style>
+
+<!-- <section class="author-profile">
+  <div class="author-avatar">
+    {
+      authorInfo.picture ? (
+        <img src={authorInfo.picture} alt={`${authorInfo.name} profile picture`} />
+      ) : (
+        <span aria-hidden="true">{authorInfo.name.charAt(0)}</span>
+      )
+    }
+  </div>
+
+  <div class="author-details">
+    <h1>{authorInfo.name}</h1>
+
+    {authorInfo.title && <div class="author-title">{authorInfo.title}</div>}
+
+    {authorInfo.bio && <p class="author-bio">{authorInfo.bio}</p>}
+  </div>
+</section> -->
+
+<section class="author-profile">
+  <div class="author-overview">
+    <div class="author-avatar">
+      {
+        authorInfo.picture ? (
+          <img src={authorInfo.picture} alt={`${authorInfo.name} profile picture`} />
+        ) : (
+          <span aria-hidden="true">{authorInfo.name.charAt(0)}</span>
+        )
+      }
+    </div>
+
+    <div class="author-details">
+      <h1>{authorInfo.name}</h1>
+
+      {authorInfo.title && <div class="author-title">{authorInfo.title}</div>}
+
+      {authorInfo.bio && <p class="author-bio">{authorInfo.bio}</p>}
+    </div>
+  </div>
+
+  {
+    socialLinks.length > 0 && (
+      <div class="author-socials">
+        {socialLinks.map((social) => (
+          <a href={social.href} target="_blank" rel="noopener noreferrer">
+            <Icon name={social.icon} />
+            <span>{social.label}</span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</section>

@@ -13,6 +13,7 @@ import { custom_starlightTags } from './config/plugins/custom_starlightTags.mjs'
 import { custom_starlightUiTweaks } from './config/plugins/custom_starlightUiTweaks.mjs'
 import { custom_starlightAnnouncement } from './config/plugins/custom_starlightAnnouncement.mjs';
 import { custom_starlightSidebarTopics } from './config/plugins/custom_starlightSidebarTopics.mjs';
+import { custom_sidebarCleanup } from './config/plugins/custom-sidebarCleanup.mjs';
 
 // Custom configurations
 // import { BASE_PATH } from './config/basePath.mjs';
@@ -67,6 +68,7 @@ export default defineConfig({
             custom_starlightAnnouncement,
             custom_starlightSidebarTopics,
             custom_starlightTags, // must be listed after 'custom_starlightSidebarTopics'
+            custom_sidebarCleanup,
         ],
 		}),
         icon()],

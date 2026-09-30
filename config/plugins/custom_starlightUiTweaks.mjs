@@ -4,6 +4,7 @@ import { withBase } from '../basePath.mjs';
 export const custom_starlightUiTweaks =
     starlightUiTweaks({
         navbarLinks: [
+            { label: "About", href: withBase("/about") },
             { label: "Documentation", href: withBase("/guides") },
             { label: "Meetings", href: withBase("/meetings") },
         ],
@@ -13,8 +14,10 @@ export const custom_starlightUiTweaks =
             firstColumn: {
             title: "About Us",
             links: [
-                // { label: "About", href: withBase("/about") },
+                { label: "About", href: withBase("/about") },
+                { label: "Authors", href: withBase("/authors") },
                 { label: "Meetings", href: withBase("/meetings") },
+                { label: "FAQ", href: withBase("/faq") },
             ],
             },
             secondColumn: {

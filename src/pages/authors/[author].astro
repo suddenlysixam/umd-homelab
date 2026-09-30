@@ -1,0 +1,84 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { slug } from "github-slugger";
+
+import { authors } from "../../../config/authors.mjs";
+import type { Author } from "../../types/author";
+import AuthorProfile from "../../components/AuthorProfile.astro";
+import AuthorPresentations from "../../components/AuthorPresentations.astro";
+import { authorsSidebar } from "../../../config/sidebar.mjs";
+import { getSortedAuthorKeys } from "../../../config/authorUtils.mjs";
+
+type AuthorKey = keyof typeof authors;
+
+export function getStaticPaths() {
+  return (getSortedAuthorKeys() as AuthorKey[]).map((author) => ({
+    params: {
+      author: slug(authors[author].name),
+    },
+    props: {
+      author,
+    },
+  }));
+}
+
+interface Props {
+  author: AuthorKey;
+}
+
+const { author } = Astro.props;
+const authorInfo: Author = authors[author];
+const headings = [
+  {
+    depth: 2,
+    slug: "presentations",
+    text: "Presentations",
+  },
+];
+---
+
+<!-- <style is:inline>
+  .content-panel:has(h1#_top) {
+    display: none;
+  }
+</style> --><!-- <style is:inline>
+  h1#_top {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style> -->
+<style is:inline>
+  .content-panel:has(h1#_top) {
+    position: relative;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    overflow: visible;
+  }
+
+  h1#_top {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+</style>
+
+<StarlightPage
+  frontmatter={{ title: authorInfo.name, description: authorInfo.bio ?? `${authorInfo.name} — Build I.T. Club` }}
+  sidebar={authorsSidebar}
+  headings={headings}
+>
+  <AuthorProfile author={author} />
+  <AuthorPresentations author={author} />
+</StarlightPage>

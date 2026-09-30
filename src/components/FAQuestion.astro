@@ -1,0 +1,46 @@
+---
+interface Props {
+  question: string;
+  open?: boolean;
+}
+
+const { question, open = true } = Astro.props;
+---
+
+<style>
+  .faq-item {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  summary {
+    padding: 1rem 1.25rem 0.25rem;
+    font-weight: 600;
+    /* cursor: pointer; */
+  }
+
+  summary:hover {
+    color: var(--sl-color-text-accent);
+  }
+
+  .faq-answer {
+    padding: 0 1.75rem 2rem;
+  }
+
+  .faq-answer :global(:first-child) {
+    margin-top: 0;
+  }
+
+  .faq-answer :global(:last-child) {
+    margin-bottom: 0;
+  }
+</style>
+
+<details class="faq-item" open={open}>
+  <summary>{question}</summary>
+
+  <div class="faq-answer">
+    <slot />
+  </div>
+</details>

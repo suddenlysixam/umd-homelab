@@ -1,0 +1,21 @@
+---
+import { authors } from "../../config/authors.mjs";
+import AuthorCard from "./AuthorCard.astro";
+import { getSortedAuthorKeys } from "../../config/authorUtils.mjs";
+
+type AuthorKey = keyof typeof authors;
+
+const sortedAuthors = getSortedAuthorKeys() as AuthorKey[];
+---
+
+<div class="author-grid">
+  {sortedAuthors.map((author) => <AuthorCard author={author} />)}
+</div>
+
+<style>
+  .author-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: 1rem;
+  }
+</style>

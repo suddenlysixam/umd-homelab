@@ -1,0 +1,105 @@
+---
+import { Card, CardGrid } from "@astrojs/starlight/components";
+---
+
+<style>
+  .about-intro {
+    margin-bottom: 1rem;
+  }
+
+  .about-info-short {
+    margin-top: 0;
+    margin-bottom: 1.75rem;
+    font-size: 1.5rem;
+    line-height: 1.7;
+  }
+
+  .about-info-long {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+.dual-card-grid {
+  & .card:nth-child(4n + 2) {
+    --sl-color-purple: var(--sl-color-blue);
+    --sl-color-purple-low: var(--sl-color-blue-low);
+  }
+}
+
+  /* .about-callout {
+    margin: 1.75rem 0;
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--sl-color-accent);
+    border-radius: 0 0.5rem 0.5rem 0;
+    background: var(--sl-color-accent-low);
+  } */
+
+  /* .about-tagline {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  } */
+
+  /* .about-welcome {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    /* margin-top: 1rem; */
+  } */
+
+  /* .about-welcome strong {
+    text-transform: uppercase;
+  }
+
+  .about-welcome span {
+    color: var(--sl-color-gray-2);
+    font-style: italic;
+  } */
+
+  /* .faq-link {
+    display: inline-block;
+    margin-top: 1rem;
+    font-weight: 600;
+  } */
+</style>
+
+<div class="about-intro">
+  <p class="about-info-short">
+    Build I.T. is a hands-on technology club focused on building practical IT skills through projects, experimentation,
+    and collaboration.
+  </p>
+
+  <div class="dual-card-grid">
+    <CardGrid>
+        <Card title="Learn by doing" icon="puzzle"> Break things, find the problem, fix it, keep building.</Card>
+        <Card title="All skill levels welcome" icon="approve-check">
+        No experience, knowledge, or special equipment required.
+        </Card>
+    </CardGrid>
+  </div>
+
+  <!-- <div class="about-callout">
+    <p class="about-tagline">Learn by doing. Break things, find the problem, fix it, keep building.</p>
+  </div>
+
+  <div class="about-callout">
+    <div class="about-welcome">
+      <strong>All skill levels welcome.</strong>
+      <span>No experience, knowledge, or special equipment required.</span>
+    </div>
+  </div> -->
+
+  <p class="about-info-long">
+    The Build I.T. Club at the University of Maryland exists to foster a hands-on learning environment where students
+    can explore system administration, networking, virtualization, cybersecurity, self-hosting, and other IT-related
+    skills. The club aims to build a supportive community where students of all skill levels can collaborate and
+    experiment in a curiosity-driven environment, gaining practical, real-world experience that supports both academic
+    growth and professional development. Through workshops, peer mentorship, and shared resources, the Build I.T. Club
+    encourages innovation, self-reliance, and a deeper understanding of how computing systems work from the ground up.
+  </p>
+
+  <!-- <a class="faq-link" href="/faq/"> Frequently Asked Questions → </a> -->
+</div>
