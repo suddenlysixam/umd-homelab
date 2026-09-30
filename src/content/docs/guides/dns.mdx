@@ -2,11 +2,21 @@
 title: "Self Hosted DNS"
 date: 2025-03-03
 modify_date: 2025-10-01
-# cover: /assets/images/covers/2025-03-03_self-hosted-dns-14.png
 tags: 
-  - Network
+  - network
+slides: "/slides/2025-09-30_Self-Hosted-DNS.pdf"
 ---
-## Prerequisites
+
+import { Aside } from '@astrojs/starlight/components';
+import Slides from '../../../components/Slides.astro';
+
+<Aside type="caution" title="Under Construction">
+  Guide under construction. Below are the slides from where when we last ran this project.
+</Aside>
+
+<Slides frontmatter={frontmatter} />
+
+{/* ## Prerequisites
 
 ### What you will need
 
@@ -577,20 +587,4 @@ systemctl status named
 sudo journalctl -u named
 ```
 
-## Final thoughts
-
-Hopefully you've now got DNS up and running! If you ran into any issues not mentioned here, have suggestions for the guide, or have any additional questions, please reach out to us in the [Discord](https://suddenlysixam.club/discord).
-
-_Home is where the lab is. ~Megan_
-
-<style>
-  blockquote {
-    background: #d9edf7;
-    /* border: 1px solid SteelBlue; */
-    border-radius: 5px;
-    border-left: 5px solid #31708f !important;
-    padding: 3px 10px !important;
-    /* margin: 1px 40px 1px 30px; */
-    color: #31708f !important;
-  }
-</style>
+*/}
