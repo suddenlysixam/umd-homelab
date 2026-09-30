@@ -24,7 +24,7 @@ export const custom_starlightUiTweaks =
             title: "Resources",
             links: [
                 { label: "Guides", href: withBase("/guides") },
-                // { label: "Reference", href: withBase("/reference") },
+                { label: "Reference", href: withBase("/reference") },
             ],
             },
             thirdColumn: {
