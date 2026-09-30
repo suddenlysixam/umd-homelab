@@ -1,0 +1,126 @@
+---
+title: Debian VM (w/ VirtualBox)
+description: Install VirtualBox and create a Debian 13 virtual machine
+date: 2026-09-22
+modify_date: 2026-09-22
+tags:
+  - virtualization
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+[VirtualBox](https://www.virtualbox.org/) is a free and open-source virtual machine monitor (software that creates and runs virtual machines, i.e. emulated computer systems) developed by Oracle. VirtualBox can run virtual machines (VMs) running a variety of operating systems. 
+
+These instructions will go over how to set up a VirtualBox VM running Debian 13. 
+
+<Aside type="note">
+More information on VirtualBox and virtualization in general is readily available online, and we encourage you to explore, learn, tinker, and have fun with these technologies on your own!
+</Aside>
+
+## Installing VirtualBox
+
+Navigate to the [VirtualBox Downloads](https://www.virtualbox.org/wiki/Downloads) page and follow the following instructions based on your operating system.
+
+<Tabs>
+<TabItem label="macOS">
+
+1. Download the appropriate VirtualBox package for your Mac's architecture (Intel or Apple silicon).
+2. Double-click the downloaded `.dmg` file to mount it.
+3. Double-click the installer and follow the installation wizard.
+
+</TabItem>
+
+<TabItem label="Windows">
+
+1. Download the VirtualBox package for Windows.
+2. Double-click the downloaded `.exe` file and follow the installation wizard.
+
+</TabItem>
+
+<TabItem label="Linux">
+
+1. Download the appropriate VirtualBox package for your Linux distribution.
+
+   VirtualBox provides distribution-specific `.deb` and `.rpm` packages, as well as an executable `.run` installer.
+
+2. Install the downloaded package. If you downloaded a `.deb` or `.rpm`, using your distribution's package manager will automatically handle dependencies.
+
+<Aside type="caution" title="UEFI Secure Boot">
+
+If your system uses UEFI Secure Boot and you have not previously enrolled a **Machine Owner Key (MOK)**, you may receive a message stating that additional configuration is required to use third-party drivers.
+
+You will be enrolling a Machine-Owner Key in your firmware; this is just another layer of protection on top of UEFI Secure Boot to ensure that you are not a malicious third party.
+
+You will need to create a MOK password, reboot your computer, and enroll the key when prompted.
+
+**Remember the password you create!**
+
+For more information, see discussions about MOK enrollment on [Ask Ubuntu](https://askubuntu.com/) or [Stack Exchange](https://unix.stackexchange.com/).
+
+</Aside>
+
+</TabItem>
+</Tabs>
+
+## Download Debian
+
+Download the appropriate **Debian 13 ISO** for your computer's architecture from the [Debian website](https://www.debian.org/distrib/).
+
+The download may take a few minutes.
+
+## Create the Virtual Machine
+
+Open VirtualBox. You will be asked to choose an **Experience Model**, **Basic Mode** is fine.
+
+Select **Create a new virtual machine (VM)**.
+
+### Virtual Machine Name and Operating System
+
+Under “Virtual machine name and operating system”:
+
+1. Give your virtual machine a name.
+2. Select the Debian 13 ISO you downloaded.
+3. You can leave **Proceed with Unattended Installation** checked.
+
+### Unattended Guest OS Installation
+
+Under “Set up unattended guest OS installation”:
+
+Set the password for the user that will be created inside the virtual machine.
+
+### Virtual Hardware
+
+Under “Specify virtual hardware” and “Specify virtual hard disk”:
+
+Choose how many resources from your computer will be temporarily allocated to the virtual machine.
+
+A reasonable starting point is:
+
+| Resource | Recommended |
+| -------- | ----------- |
+| Memory   | 4 GB        |
+| Storage  | 16 GB       |
+
+Debian can run with fewer resources if necessary. Its [recommended minimums](https://www.debian.org/releases/stable/amd64/ch02s05.en.html) are **512 MB of memory** and **4 GB of storage**.
+
+### Finish Installation
+
+Select **Finish** and boot into Debian 13!
+
+VirtualBox will use the Debian ISO and the settings you provided to install Debian 13.
+
+Once installation is complete, you can use the Debian VM like a separate computer running inside your existing operating system.
+
+## Shutting Down the VM
+
+When you are finished using your virtual machine, use **Save State** or **Shut Down**.
+
+<Aside type="caution" title="Avoid Power Off">
+
+Avoid using **Power Off** unless necessary. Using **Power Off** is like yanking the power cord on a physical computer and does not allow the operating system to shut down properly.
+
+</Aside>
+
+## Additional Resources
+
+More information is available in the [official VirtualBox documentation](https://www.virtualbox.org/wiki/Documentation).
