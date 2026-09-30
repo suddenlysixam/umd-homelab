@@ -1,6 +1,6 @@
 tags:
   network:
-    label: "Network"
+    label: "network"
     description: "Network related topics"
     color: "#10b981"
     icon: "🌐"
@@ -11,11 +11,23 @@ tags:
   #   color: "#f87171"
   #   icon: "💻"
 
-  # linux:
-  #   label: "Linux"
-  #   description: "Linux related topics"
-  #   color: "#8b5cf6"
-  #   icon: "🐧"
+  linux:
+    label: "linux"
+    description: "Linux related topics"
+    color: "#8b5cf6"
+    icon: "🐧"
+
+  virtualization:
+    label: "virtualization"
+    description: "Virtualization related topics"
+    color: "#fbbf24"
+    icon: "🖥️"
+
+  os:
+    label: "os"
+    description: "Operating system related topics"
+    color: "#3b82f6"
+    icon: "🖥️"
 
   # getting-started:
   #   label: "Getting Started"

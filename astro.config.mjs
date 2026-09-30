@@ -49,6 +49,7 @@ export default defineConfig({
             './src/styles/color-themes/terminal/color-theme-terminal.css',
             './src/styles/custom-base.css',
             './src/styles/meeting-cards.css',
+            './src/styles/guides.css',
         ],
         components: {
             SiteTitle: './src/components/SiteTitle.astro',

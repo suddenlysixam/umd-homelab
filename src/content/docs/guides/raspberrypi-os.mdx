@@ -1,0 +1,242 @@
+---
+title: "Installing Raspberry Pi OS"
+description: Install and configure Raspberry Pi OS on a Raspberry Pi
+date: 2024-12-02
+modify_date: 2026-09-30
+tags:
+  - linux
+  - os
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+<div class="guide">
+
+This guide walks through installing **Raspberry Pi OS** on an SD card, booting a Raspberry Pi for the first time, and performing some basic configuration.
+
+For the initial installation, we will use the official [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
+
+<Aside type="note">
+You can alternatively directly download OS images from the above link if you wish to install them manually.
+</Aside>
+
+## What You'll Need
+
+Before getting started, you will need:
+
+* A Raspberry Pi
+* An SD card
+* A device (e.g. laptop, desktop, another pi) with:
+  * Raspberry Pi Imager installed
+  * An SD card slot, adapter, or reader
+* A monitor and appropriate display cable
+* A keyboard and mouse
+* A power cable (or another appropriate power source, such as PoE)
+* (If using a wired connection) Ethernet cable
+
+<Aside type="note">
+There are other ways to configure a Raspberry Pi, including running it headlessly without a monitor, keyboard, or mouse. If you are configuring a Pi with specific needs in mind, you may need to adjust these instructions to fit your use case.
+</Aside>
+
+## Install Raspberry Pi OS
+
+Insert the SD card into the computer running Raspberry Pi Imager and open **Raspberry Pi Imager**.
+
+<Steps>
+
+1. **Choose your Raspberry Pi**
+   
+   Select the model of Raspberry Pi you are installing the operating system on.
+   
+   *For example: **Raspberry Pi 4***
+   
+   <img src="/images/projects/raspberrypios/select-device.png" alt="Select your Raspberry Pi device"/>
+   
+1. **Choose the operating system**
+
+   Choose the operating system you want to install on your Raspberry Pi.
+
+   *For example: **Raspberry Pi OS (64-bit)***
+
+   <img src="/images/projects/raspberrypios/select-os.png" alt="Choose operating system"/>
+
+   <Aside type="note">
+   Raspberry Pi OS is a port of **Debian**. For some software and configuration, you may need to follow instructions written for Debian rather than instructions specifically written for Raspberry Pi OS.
+   </Aside>
+
+1. **Choose your storage**
+
+   Select the SD card you inserted.
+
+   <img src="/images/projects/raspberrypios/select-storagedevice.png" alt="Select your storage device"/>
+
+   <Aside type="caution" title="Check the selected storage device">
+   Make sure you select the correct SD card. Its existing contents will be erased when Raspberry Pi Imager writes the operating system.
+   </Aside>
+
+1. **Customization: Set Hostname**
+
+   Enter the hostname for your Raspberry Pi.
+
+   <img src="/images/projects/raspberrypios/custom-hostname.png" alt="Set hostname"/>
+
+1. **Customization: Set Localization**
+
+   Configure the localization settings for your Raspberry Pi.
+
+   <img src="/images/projects/raspberrypios/custom-localisation.png" alt="Set localization"/>
+
+1. **Customization: Set Username & Password**
+
+   Enter the username and password for your Raspberry Pi.
+
+   <img src="/images/projects/raspberrypios/custom-username-password.png" alt="Set username and password"/>
+
+1. **Customization: Wifi, SSH, and Raspberry Pi Connect**
+
+   Configure the Wifi, SSH, and Raspberry Pi Connect settings for your Raspberry Pi as needed. For the purposes of this guide, you can leave them at their default settings.
+
+1. **Write the operating system to the SD card**
+
+   Once you have configured all the necessary settings, click **Write** to write the operating system to the SD card. Confirm that you want to proceed when prompted. You may also be prompted to input your password. Then, wait for the writing process to complete.
+
+   <img src="/images/projects/raspberrypios/write-image.png" alt="Write operating system to SD card"/>
+
+   <img src="/images/projects/raspberrypios/write-erase.png" alt="Confirm writing operating system to SD card"/>
+
+1. **Write complete!**
+
+   Select **Finish** when the write is complete. You have successfully written the operating system to the SD card. You can now remove the SD card from your computer and insert it into your Raspberry Pi to boot it up.
+
+   <img src="/images/projects/raspberrypios/write-complete.png" alt="Completed writing operating system to SD card"/>
+
+</Steps>
+
+## Boot the Raspberry Pi
+
+Once Raspberry Pi Imager has finished:
+
+1. Remove the SD card from your computer.
+2. Insert it into the Raspberry Pi.
+3. Connect your monitor, keyboard, mouse, network connection, and any other necessary peripherals.
+4. Connect power to the Raspberry Pi.
+
+Wait for Raspberry Pi OS to finish booting.
+
+Once it has booted, open the **Terminal**.
+
+You should see a command prompt similar to:
+
+```text
+username@hostname
+```
+
+## Update Raspberry Pi OS
+
+After the Raspberry Pi has booted, update its package information and installed packages:
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+<Aside type="tip">
+You should periodically install updates unless you have configured your Raspberry Pi to handle updates automatically. It is particularly useful to update before making other significant system changes.
+</Aside>
+
+## Troubleshooting the System Time
+
+If the system time is incorrect or is not synchronizing, you can restart network time synchronization:
+
+```bash
+sudo timedatectl set-ntp false
+timedatectl status
+
+sudo timedatectl set-ntp true
+timedatectl status
+```
+
+If the time is still incorrect, temporarily set it manually:
+
+```bash
+sudo date -s 'YYYY-MM-DD HH:MM:SS'
+```
+
+Then open the Raspberry Pi configuration utility:
+
+```bash
+sudo raspi-config
+```
+
+Check that the correct time zone is configured.
+
+Once the system time is correct, retry the commands that were previously failing.
+
+## Optional: Enable SSH Later
+
+If you did not enable SSH through Raspberry Pi Imager, you can enable it later with:
+
+```bash
+sudo raspi-config
+```
+
+Navigate to:
+
+**Interface Options → SSH → Yes**
+
+Press `Enter` to select each option.
+
+You can also enable SSH through **Preferences → Raspberry Pi Configuration** in the desktop interface.
+
+## Optional: Back Up an SD Card
+
+You can create a compressed image of an existing Raspberry Pi SD card from another Linux system.
+
+First, connect the SD card and determine its device name.
+
+<Aside type="danger" title="Verify the device name">
+Be certain that `<device>` refers to the correct SD card before using `dd`. Specifying the wrong device can result in data loss.
+</Aside>
+
+Create the backup:
+
+```bash
+sudo dd if=<device> status=progress bs=32M | gzip -c > <path-to-backup>/raspberrypi.img.gz
+```
+
+To restore the backup:
+
+```bash
+gunzip -c <path-to-backup>/raspberrypi.img.gz | sudo dd of=<device> status=progress bs=32M
+```
+
+The backup is compressed with `gzip` so that the resulting file does not necessarily occupy the full capacity of the SD card.
+
+## Optional: Clone an SD Card
+
+To clone one SD card directly to another, connect both cards to the computer and determine their device names.
+
+<Aside type="danger" title="Double-check the input and output devices">
+The **input device** is the SD card you are copying **from**.
+
+The **output device** is the SD card you are copying **to**. Existing data on the output device will be overwritten.
+
+Make sure both device names are correct before running the command.
+
+</Aside>
+
+Clone the card with:
+
+```bash
+sudo dd bs=32M if=<input-device> of=<output-device>
+```
+
+Once the command completes, the output SD card will contain a copy of the original card.
+
+## Additional Resources
+
+- [Raspberry Pi Imager](https://www.raspberrypi.org/software/)
+- [Raspberry Pi Documentation](https://www.raspberrypi.org/documentation/)
+- [Getting Started with Raspberry Pi Imager](https://www.raspberrypi.com/documentation/computers/getting-started.html#imager-install)
+
+</div>

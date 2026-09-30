@@ -7,30 +7,14 @@ export const custom_starlightSidebarTopics =
             label: 'Guides',
             link: '/guides',
             icon: 'open-book',
-            // items: ['guides/example'],
-            // items: [
-            //     {
-            //     label: 'Guides',
-            //     autogenerate: { directory: 'guides' },
-            //     },
-            // ],
             items: [{ autogenerate: { "directory": "guides" } }],
         },
-        // {
-        //     label: 'Reference',
-        //     link: '/reference',
-        //     icon: 'information',
-        //     // id: 'reference',
-        //     // badge: { text: 'Official', variant: 'success' },
-        //     // items: ['reference/example'],
-        //     // items: [
-        //     //     {
-        //     //     label: 'Reference',
-        //     //     autogenerate: { directory: 'reference' },
-        //     //     },
-        //     // ],
-        //     items: [{ autogenerate: { "directory": "reference" } }],
-        // },
+        {
+            label: 'Reference',
+            link: '/reference',
+            icon: 'information',
+            items: [{ autogenerate: { "directory": "reference" } }],
+        },
         {
             label: 'GitHub',
             icon: 'github',

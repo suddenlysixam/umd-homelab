@@ -1,0 +1,112 @@
+---
+title: vim
+description: A reference page for the text editor vim
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+[Vim](https://www.vim.org/) is a terminal-based text editor commonly available on Linux systems.
+
+## Installation
+
+On Raspberry Pi OS, install Vim using `apt`:
+
+```bash id="j0hdno"
+sudo apt install vim
+```
+
+<Aside type="note">These instructions assume you are using Raspberry Pi OS (Debian). Installation may be different if you are using another Linux distribution or operating system.</Aside>
+
+## Usage
+
+Once installed, open a file with:
+
+```bash
+vim filename
+```
+
+## Modes
+
+Vim uses different **modes** for editing and entering commands.
+
+| Mode    | What it does                          | How to enter         |
+| ------- | ------------------------------------- | -------------------- |
+| Normal  | Navigate and run commands             | `Esc`                |
+| Insert  | Type and edit text                    | `i`                  |
+| Command | Save, quit, and other file operations | `:` from Normal mode |
+
+If you aren't sure what mode you're in, press `Esc` to return to **Normal mode**.
+
+## Editing Text
+
+From Normal mode:
+
+| Key      | Action                                   |
+| -------- | ---------------------------------------- |
+| `i`      | Insert text before the cursor            |
+| `u`      | Undo                                     |
+| `Ctrl+r` | Redo                                     |
+
+Press `Esc` when you're finished editing.
+
+## Moving Around
+
+To navigate around, use the arrow keys. Vim also provides a few useful shortcuts:
+
+| Key  | Action                          |
+| ---- | ------------------------------- |
+| `gg` | Go to the beginning of the file |
+| `G`  | Go to the end of the file       |
+| `0`  | Go to the beginning of the line |
+| `$`  | Go to the end of the line       |
+
+## Saving and Quitting
+
+Press `Esc` first, then type:
+
+| Command | Action              |
+| ------- | ------------------- |
+| `:w`    | Save                |
+| `:q`    | Quit                |
+| `:wq`   | Save and quit       |
+| `:q!`   | Quit without saving |
+
+Press `Enter` after entering the command.
+
+## Copy (Yank), Cut, and Paste
+
+In Vim, copying text is called **yanking**, and deleting text can function like cutting, since deleted text can be pasted elsewhere.
+
+| Key  | Action                        |
+| ---- | ----------------------------- |
+| `yy` | Yank (copy) the current line  |
+| `dd` | Delete (cut) the current line |
+| `p`  | Paste after the cursor        |
+
+You can also combine a number with `yy` or `dd` to affect multiple lines. For example, `3yy` yanks the current line and the next two lines (3 lines total), while `3dd` deletes/cuts them.
+
+## Searching
+
+From Normal mode, type `/` followed by the text you want to find:
+
+`/search term`
+
+Press `Enter` to search.
+
+Then use:
+
+| Key | Action                   |
+| --- | ------------------------ |
+| `n` | Go to the next match     |
+| `N` | Go to the previous match |
+
+## TL;DR: The Bare Minimum
+
+If you only remember a few things:
+
+| Key / Command | Action                |
+| ------------- | --------------------- |
+| `i`           | Start editing         |
+| `Esc`         | Return to Normal mode |
+| `:wq`         | Save and quit         |
+| `:q!`         | Quit without saving   |
