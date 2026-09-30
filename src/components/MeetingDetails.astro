@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import { withBase } from "../../config/basePath.mjs";
 import AddToCalendarButton from "./AddToCalendarButton.astro";
+import Slides from "./Slides.astro";
 
 const { frontmatter } = Astro.props;
 
@@ -138,25 +139,7 @@ const slidesUrl = frontmatter.slides ? withBase(frontmatter.slides) : undefined;
   )
 }
 
-{
-  slidesUrl && (
-    <section class="slides-section">
-      <h3>Slides</h3>
-
-      <div class="slides-actions">
-        <a href={slidesUrl} target="_blank" rel="noopener noreferrer">
-          Open meeting slides
-        </a>
-      </div>
-
-      <details class="slides-preview-wrapper">
-        <summary>Preview slides</summary>
-
-        <iframe class="slides-preview" src={slidesUrl} title="Meeting slides preview" loading="lazy" />
-      </details>
-    </section>
-  )
-}
+<Slides frontmatter={frontmatter} />
 
 {
   frontmatter.project && (

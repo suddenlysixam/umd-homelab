@@ -1,0 +1,25 @@
+---
+const { frontmatter } = Astro.props;
+import { withBase } from "../../config/basePath.mjs";
+const slidesUrl = frontmatter.slides ? withBase(frontmatter.slides) : undefined;
+---
+
+{
+  slidesUrl && (
+    <section class="slides-section">
+      <h3>Slides</h3>
+
+      <div class="slides-actions">
+        <a href={slidesUrl} target="_blank" rel="noopener noreferrer">
+          Open slides
+        </a>
+      </div>
+
+      <details class="slides-preview-wrapper">
+        <summary>Preview slides</summary>
+
+        <iframe class="slides-preview" src={slidesUrl} title="Slides preview" loading="lazy" />
+      </details>
+    </section>
+  )
+}

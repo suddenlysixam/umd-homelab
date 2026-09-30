@@ -2,10 +2,19 @@
 title: "NGINX (w/ Etherpad)"
 date: 2025-04-07
 modify_date: 2025-04-07
-# cover: /assets/images/covers/2025-04-03_dnsmasq.png
+slides: "/slides/2025-04-07_nginx-etherpad.pdf"
 ---
 
-The purpose of this project will be to make a web server. But of course, we need something to serve... on the web. So, for this project we are going to be using [NGINX](https://nginx.org/) [![GitHub Org's stars](https://img.shields.io/github/stars/nginx?label=NGINX)](https://github.com/nginx) to self host [Etherpad](https://etherpad.org/) [![GitHub Repo stars](https://img.shields.io/github/stars/ether/etherpad-lite?label=Etherpad)](https://github.com/ether/etherpad-lite).
+import { Aside } from '@astrojs/starlight/components';
+import Slides from '../../../components/Slides.astro';
+
+<Aside type="caution" title="Under Construction">
+  Guide under construction. Below are the slides from where when we last ran this project.
+</Aside>
+
+<Slides frontmatter={frontmatter} />
+
+{/* The purpose of this project will be to make a web server. But of course, we need something to serve... on the web. So, for this project we are going to be using [NGINX](https://nginx.org/) [![GitHub Org's stars](https://img.shields.io/github/stars/nginx?label=NGINX)](https://github.com/nginx) to self host [Etherpad](https://etherpad.org/) [![GitHub Repo stars](https://img.shields.io/github/stars/ether/etherpad-lite?label=Etherpad)](https://github.com/ether/etherpad-lite).
 
 ## Prerequisites
 
@@ -434,4 +443,4 @@ We can now see Etherpad at our `<hostname>.local`, but our browser doesn't like 
 ## Recommended Next Steps
 
 1. Configure a firewall (e.g. [UFW](/projects/ufw))
-1. Configure a non-self signed cert (e.g. certbot)
+1. Configure a non-self signed cert (e.g. certbot) */}
