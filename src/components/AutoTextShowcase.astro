@@ -19,11 +19,13 @@ const entries = sortPagesByModifiedDate(pages).map((page) => {
     day: "numeric",
   });
 
-  const dateText = formattedDate ? `${page.data.modify_date ? "Updated" : "Published"} ${formattedDate}` : undefined;
+  const dateText = formattedDate
+    ? `<i>${page.data.modify_date ? "Updated" : "Published"} ${formattedDate}</i>`
+    : undefined;
 
   return {
     title: page.data.title,
-    description: [dateText, page.data.description].filter(Boolean).join(" — "),
+    description: [page.data.description, dateText].filter(Boolean).join('<div style="margin-top: 0.5rem;"></div>'),
     href: withBase(getPagePath(page)),
   };
 });
