@@ -6,12 +6,14 @@ export const custom_starlightSidebarTopics =
         {
             label: 'Guides',
             link: '/guides',
+            id: 'guides',
             icon: 'open-book',
             items: [{ autogenerate: { "directory": "guides" } }],
         },
         {
             label: 'Reference',
             link: '/reference',
+            id: 'reference',
             icon: 'information',
             items: [{ autogenerate: { "directory": "reference" } }],
         },
@@ -21,9 +23,10 @@ export const custom_starlightSidebarTopics =
             link: github_link,
         },
     ],{
-        // topics: {
-        //     reference: ['/staging/', '/staging/**/*'],
-        // },
+        topics: {
+            // reference: ['/staging/', '/staging/**/*'],
+            guides: ['/docs'],
+        },
         exclude: [
             '/about', '/authors', '/authors/**/*', '/faq',
             '/meetings', '/meetings/**/*',
