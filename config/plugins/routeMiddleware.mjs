@@ -1,10 +1,10 @@
-export const custom_sidebarCleanup = {
-    name: 'custom-sidebar-cleanup',
+export const routeMiddleware = {
+    name: 'route-middleware',
 
     hooks: {
         'config:setup': ({ addRouteMiddleware }) => {
             addRouteMiddleware({
-                entrypoint: './config/plugins/sidebarCleanupMiddleware.ts',
+                entrypoint: './config/plugins/middleware/sidebarCleanupMiddleware.ts',
                 order: 'post',
             });
         },
