@@ -1,0 +1,21 @@
+---
+const { frontmatter } = Astro.props;
+import { isUpcoming } from "../../../config/dateUtils.ts";
+const upcoming = isUpcoming(new Date(frontmatter.date));
+---
+
+{
+  upcoming && frontmatter.rsvp && (
+    <>
+      <h3>RSVP</h3>
+      {/* <iframe src={frontmatter.rsvp} width="640" height="551" frameborder="0" marginheight="0" marginwidth="0">
+        Loading…
+      </iframe> */}
+      <div class="rsvp-frame">
+        <iframe src={frontmatter.rsvp} title="Meeting RSVP form" loading="lazy">
+          Loading…
+        </iframe>
+      </div>
+    </>
+  )
+}

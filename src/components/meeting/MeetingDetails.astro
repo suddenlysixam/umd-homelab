@@ -9,6 +9,7 @@ import {
   format24HourTime,
 } from "../../../config/dateUtils.ts";
 import AddToCalendarButton from "./AddToCalendarButton.astro";
+import RSVP from "./RSVP.astro";
 import Slides from "./Slides.astro";
 
 const { frontmatter } = Astro.props;
@@ -85,21 +86,7 @@ const endTime = format24HourTime(endDateObj);
   }
 </section>
 
-{
-  upcoming && frontmatter.rsvp && (
-    <>
-      <h3>RSVP</h3>
-      {/* <iframe src={frontmatter.rsvp} width="640" height="551" frameborder="0" marginheight="0" marginwidth="0">
-        Loading…
-      </iframe> */}
-      <div class="rsvp-frame">
-        <iframe src={frontmatter.rsvp} title="Meeting RSVP form" loading="lazy">
-          Loading…
-        </iframe>
-      </div>
-    </>
-  )
-}
+<RSVP frontmatter={frontmatter} />
 
 <Slides frontmatter={frontmatter} />
 
