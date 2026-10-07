@@ -1,8 +1,8 @@
 ---
-import { authors } from "../../config/authors.mjs";
-import { withBase } from "../../config/basePath.mjs";
+import { authors } from "../../../config/authors.mjs";
+import { withBase } from "../../../config/basePath.mjs";
 import { slug } from "github-slugger";
-import type { Author } from "../types/author";
+import type { Author } from "../../types/author";
 
 interface Props {
   author: keyof typeof authors;

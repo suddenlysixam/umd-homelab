@@ -5,7 +5,7 @@ export const custom_starlightUiTweaks =
     starlightUiTweaks({
         navbarLinks: [
             { label: "About", href: withBase("/about") },
-            { label: "Documentation", href: withBase("/guides") },
+            { label: "Documentation", href: withBase("/docs") },
             { label: "Meetings", href: withBase("/meetings") },
         ],
         footer: {
