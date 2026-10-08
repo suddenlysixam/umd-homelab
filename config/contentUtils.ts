@@ -6,8 +6,9 @@ export function sortPagesByModifiedDate(
     pages: DocsEntry[],
 ): DocsEntry[] {
     return [...pages].sort((a, b) => {
-        const dateA = a.data.modify_date ?? a.data.date;
-        const dateB = b.data.modify_date ?? b.data.date;
+        // Use lastUpdated if it is a Date (not a boolean or null)
+        const dateA = (typeof a.data.lastUpdated === "boolean" ? a.data.date : a.data.lastUpdated) ?? a.data.date;
+        const dateB = (typeof b.data.lastUpdated === "boolean" ? b.data.date : b.data.lastUpdated) ?? b.data.date;
 
         if (!dateA && !dateB) {
             return a.data.title.localeCompare(b.data.title);

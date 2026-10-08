@@ -16,7 +16,6 @@ export const collections = {
 						rsvp: z.url().optional(),
 						slides: z.string().optional(),
 						project: z.string().optional(),
-						modify_date: z.date().optional(),
 					}),
 			// extend: (context) => blogSchema(context).extend(topicSchema.shape)
 		})
