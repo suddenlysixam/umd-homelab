@@ -54,8 +54,9 @@ export default defineConfig({
             './src/styles/guides.css',
         ],
         components: {
-            SiteTitle: './src/components/SiteTitle.astro',
-            SocialIcons: './src/components/SocialIcons.astro',
+            SiteTitle: './src/components/overrides/SiteTitleOverride.astro',
+            SocialIcons: './src/components/overrides/SocialIconsOverride.astro',
+            PageTitle: './src/components/overrides/PageTitleOverride.astro',
         },
         plugins: [
             starlightBasePath(),
