@@ -19,7 +19,7 @@ export async function onRequest(
 
     const path = context.url.pathname;
 
-    if (!path.startsWith("/meetings/")) {
+    if (path === "/meetings/" || !path.startsWith("/meetings/")) {
         return next();
     }
 
@@ -63,8 +63,8 @@ export async function onRequest(
     if (meeting.data.project) {
         starlightRoute.toc.items.push({
             depth: 3,
-            slug: "project-page",
-            text: "Project Page",
+            slug: "project-guide-page",
+            text: "Project Guide Page",
             children: [],
         });
     }
