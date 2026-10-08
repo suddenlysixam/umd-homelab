@@ -7,10 +7,15 @@ export const routeMiddleware = {
                 entrypoint: './config/plugins/middleware/guidesSortMiddleware.ts',
                 order: 'post',
             });
-            
+
             addRouteMiddleware({
                 entrypoint: './config/plugins/middleware/sidebarCleanupMiddleware.ts',
                 order: 'post',
+            });
+
+            addRouteMiddleware({
+                entrypoint: "./config/plugins/middleware/meetingHeadingsMiddleware.ts",
+                order: "post",
             });
         },
     },
