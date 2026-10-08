@@ -1,5 +1,3 @@
-import { withBase } from './basePath.mjs';
-
 export const authors = {
     none: {
         name: 'Build I.T. Club'

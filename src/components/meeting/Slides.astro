@@ -1,13 +1,13 @@
 ---
 const { frontmatter } = Astro.props;
-import { withBase } from "../../../config/basePath.mjs";
+import { withBase } from "@config/basePath.mjs";
 const slidesUrl = frontmatter.slides ? withBase(frontmatter.slides) : undefined;
 ---
 
 {
   slidesUrl && (
     <section class="slides-section">
-      <h3>Slides</h3>
+      <h3 id="slides">Slides</h3>
 
       <div class="slides-actions">
         <a href={slidesUrl} target="_blank" rel="noopener noreferrer">

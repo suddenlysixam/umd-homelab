@@ -1,8 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import { ShowcaseText } from "starlight-showcases";
-import { withBase } from "../../config/basePath.mjs";
-import { sortPagesByModifiedDate, getPagePath } from "../../config/contentUtils.ts";
+import { withBase } from "@config/basePath.mjs";
+import { sortPagesByModifiedDate, getPagePath } from "@config/contentUtils.ts";
 
 const { directory } = Astro.props;
 
@@ -11,7 +11,7 @@ const pages = await getCollection("docs", ({ id, data }) => {
 });
 
 const entries = sortPagesByModifiedDate(pages).map((page) => {
-  const date = page.data.modify_date ?? page.data.date;
+  const date = (typeof page.data.lastUpdated === "boolean" ? page.data.date : page.data.lastUpdated) ?? page.data.date;
 
   const formattedDate = date?.toLocaleDateString("en-US", {
     year: "numeric",
@@ -20,7 +20,7 @@ const entries = sortPagesByModifiedDate(pages).map((page) => {
   });
 
   const dateText = formattedDate
-    ? `<i>${page.data.modify_date ? "Updated" : "Published"} ${formattedDate}</i>`
+    ? `<i>${page.data.lastUpdated ? "Updated" : "Published"} ${formattedDate}</i>`
     : undefined;
 
   return {

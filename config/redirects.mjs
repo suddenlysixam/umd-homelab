@@ -1,5 +1,5 @@
-import { withBase } from './basePath.mjs';
-import { github_link, discord_link, linkedin_link, terplink_link } from './social.mjs';
+import { withBase } from '@config/basePath.mjs';
+import { github_link, discord_link, linkedin_link, terplink_link } from '@config/social.mjs';
 
 export const custom_redirects = {
     '/github': github_link,

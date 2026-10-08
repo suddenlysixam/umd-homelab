@@ -1,5 +1,5 @@
 import starlightSidebarTopics from 'starlight-sidebar-topics'
-import { github_link } from '../social.mjs';
+import { github_link } from '@config/social.mjs';
 
 export const custom_starlightSidebarTopics =
     starlightSidebarTopics([

@@ -27,7 +27,7 @@ export async function onRequest(
     }
 
     // Tag pages should only show the sidebar provided by starlight-tags
-    if (path === '/tags/' || path.startsWith('/tags/')) {
+    if (path === '/tags' || path.startsWith('/tags/')) {
         starlightRoute.sidebar = starlightRoute.sidebar.filter(
             (entry) => entry.label === tagsLabel
         );

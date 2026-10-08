@@ -1,4 +1,4 @@
-import { authors } from './authors.mjs';
+import { authors } from '@config/authors.mjs';
 
 export function getAuthorGroup(key) {
     const author = authors[key];

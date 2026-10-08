@@ -7,9 +7,10 @@ import {
   formatTime,
   formatISODate,
   format24HourTime,
-} from "../../../config/dateUtils.ts";
-import AddToCalendarButton from "./AddToCalendarButton.astro";
-import Slides from "./Slides.astro";
+} from "@config/dateUtils.ts";
+import AddToCalendarButton from "@components/meeting/AddToCalendarButton.astro";
+import RSVP from "@components/meeting/RSVP.astro";
+import Slides from "@components/meeting/Slides.astro";
 
 const { frontmatter } = Astro.props;
 
@@ -26,8 +27,6 @@ const startDate = formatISODate(meetingDate);
 const endDate = formatISODate(endDateObj);
 const startTime = format24HourTime(meetingDate);
 const endTime = format24HourTime(endDateObj);
-
-// const slidesUrl = frontmatter.slides ? withBase(frontmatter.slides) : undefined;
 ---
 
 <section class="meeting-card">
@@ -85,28 +84,14 @@ const endTime = format24HourTime(endDateObj);
   }
 </section>
 
-{
-  upcoming && frontmatter.rsvp && (
-    <>
-      <h3>RSVP</h3>
-      {/* <iframe src={frontmatter.rsvp} width="640" height="551" frameborder="0" marginheight="0" marginwidth="0">
-        Loading…
-      </iframe> */}
-      <div class="rsvp-frame">
-        <iframe src={frontmatter.rsvp} title="Meeting RSVP form" loading="lazy">
-          Loading…
-        </iframe>
-      </div>
-    </>
-  )
-}
+<RSVP frontmatter={frontmatter} />
 
 <Slides frontmatter={frontmatter} />
 
 {
   frontmatter.project && (
     <>
-      <h3>Project Guide Page</h3>
+      <h3 id="project-guide-page">Project Guide Page</h3>
       <p>
         A project guide page was created or updated based on the project completed during this meeting. See the guide{" "}
         <a href={frontmatter.project}>here</a>.

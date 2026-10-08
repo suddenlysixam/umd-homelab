@@ -1,7 +1,7 @@
 ---
-import { authors } from "../../../config/authors.mjs";
-import AuthorCard from "./AuthorCard.astro";
-import { getSortedAuthorKeys } from "../../../config/authorUtils.mjs";
+import { authors } from "@config/authors.mjs";
+import AuthorCard from "@components/author/AuthorCard.astro";
+import { getSortedAuthorKeys } from "@config/authorUtils.mjs";
 
 type AuthorKey = keyof typeof authors;
 

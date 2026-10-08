@@ -5,5 +5,17 @@
     "node_modules/@astrojs/starlight/virtual-internal.d.ts",
     "**/*"
   ],
-  "exclude": ["dist"]
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "paths": {
+      "@config/*": ["./config/*"],
+      "@plugins/*": ["./config/plugins/*"],
+      "@middleware/*": ["./config/plugins/middleware/*"],
+      "@announcements/*": ["./src/announcements/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@src/types/*": ["./src/types/*"], // has to be @src/types because @types is used by TypeScript
+    }
+  }
 }

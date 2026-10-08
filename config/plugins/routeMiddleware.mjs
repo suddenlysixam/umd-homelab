@@ -4,13 +4,18 @@ export const routeMiddleware = {
     hooks: {
         'config:setup': ({ addRouteMiddleware }) => {
             addRouteMiddleware({
-                entrypoint: './config/plugins/middleware/guidesSortMiddleware.ts',
+                entrypoint: '@config/plugins/middleware/guidesSortMiddleware.ts',
                 order: 'post',
             });
-            
+
             addRouteMiddleware({
-                entrypoint: './config/plugins/middleware/sidebarCleanupMiddleware.ts',
+                entrypoint: '@config/plugins/middleware/sidebarCleanupMiddleware.ts',
                 order: 'post',
+            });
+
+            addRouteMiddleware({
+                entrypoint: "@config/plugins/middleware/meetingHeadingsMiddleware.ts",
+                order: "post",
             });
         },
     },

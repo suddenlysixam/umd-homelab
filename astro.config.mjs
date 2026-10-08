@@ -9,19 +9,19 @@ import starlightHeadingBadges from 'starlight-heading-badges'
 import icon from 'astro-icon';
 
 // Plugin imports with custom configurations
-import { custom_starlightTags } from './config/plugins/custom_starlightTags.mjs'
-import { custom_starlightUiTweaks } from './config/plugins/custom_starlightUiTweaks.mjs'
-import { custom_starlightAnnouncement } from './config/plugins/custom_starlightAnnouncement.mjs';
-import { custom_starlightSidebarTopics } from './config/plugins/custom_starlightSidebarTopics.mjs';
+import { custom_starlightTags } from '@plugins/custom_starlightTags.mjs'
+import { custom_starlightUiTweaks } from '@plugins/custom_starlightUiTweaks.mjs'
+import { custom_starlightAnnouncement } from '@plugins/custom_starlightAnnouncement.mjs';
+import { custom_starlightSidebarTopics } from '@plugins/custom_starlightSidebarTopics.mjs';
 
 // Custom plugins
-import { routeMiddleware } from './config/plugins/routeMiddleware.mjs';
+import { routeMiddleware } from '@plugins/routeMiddleware.mjs';
 
 // Custom configurations
-// import { BASE_PATH } from './config/basePath.mjs';
-import { custom_redirects } from './config/redirects.mjs';
-import { authors } from './config/authors.mjs';
-import { social } from './config/social.mjs';
+// import { BASE_PATH } from '@config/basePath.mjs';
+import { custom_redirects } from '@config/redirects.mjs';
+import { authors } from '@config/authors.mjs';
+import { social } from '@config/social.mjs';
 
 const SITE_SUBTITLE = '(a.k.a The Homelab Club)';
 
@@ -43,19 +43,20 @@ export default defineConfig({
         title: 'Build I.T.',
         disable404Route: true,
         logo: {
-            src: './src/assets/favicon.svg',
+            src: '@assets/favicon.svg',
         },
         // @ts-expect-error Icons provided at runtime.
         social,
         customCss: [
-            './src/styles/color-themes/terminal/color-theme-terminal.css',
-            './src/styles/custom-base.css',
-            './src/styles/meeting-cards.css',
-            './src/styles/guides.css',
+            '@styles/color-themes/terminal/color-theme-terminal.css',
+            '@styles/custom-base.css',
+            '@styles/meeting-cards.css',
+            '@styles/guides.css',
         ],
         components: {
-            SiteTitle: './src/components/SiteTitle.astro',
-            SocialIcons: './src/components/SocialIcons.astro',
+            SiteTitle: '@components/overrides/SiteTitleOverride.astro',
+            SocialIcons: '@components/overrides/SocialIconsOverride.astro',
+            PageTitle: '@components/overrides/PageTitleOverride.astro',
         },
         plugins: [
             starlightBasePath(),

@@ -1,8 +1,8 @@
 ---
-import { authors } from "../../../config/authors.mjs";
-import { withBase } from "../../../config/basePath.mjs";
+import { authors } from "@config/authors.mjs";
+import { withBase } from "@config/basePath.mjs";
 import { slug } from "github-slugger";
-import type { Author } from "../../types/author";
+import type { Author } from "@src/types/author";
 
 interface Props {
   author: keyof typeof authors;
@@ -33,7 +33,7 @@ const authorUrl = withBase(`/authors/${slug(authorInfo.name)}/`);
           class="author-picture"
           src={authorInfo.picture}
           alt={`${authorInfo.name} profile picture`}
-          loading="lazy"
+          loading="eager"
         />
       ) : (
         <span class="author-initial" aria-hidden="true">
