@@ -1,6 +1,6 @@
 ---
 const { frontmatter } = Astro.props;
-import { isUpcoming } from "../../../config/dateUtils.ts";
+import { isUpcoming } from "@config/dateUtils.ts";
 const upcoming = isUpcoming(new Date(frontmatter.date));
 ---
 

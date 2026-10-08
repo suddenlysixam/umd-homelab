@@ -2,12 +2,12 @@
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import { slug } from "github-slugger";
 
-import { authors } from "../../../config/authors.mjs";
-import type { Author } from "../../types/author";
-import AuthorProfile from "../../components/author/AuthorProfile.astro";
-import AuthorPresentations from "../../components/author/AuthorPresentations.astro";
-import { authorsSidebar } from "../../../config/sidebar.mjs";
-import { getSortedAuthorKeys } from "../../../config/authorUtils.mjs";
+import { authors } from "@config/authors.mjs";
+import type { Author } from "@src/types/author";
+import AuthorProfile from "@components/author/AuthorProfile.astro";
+import AuthorPresentations from "@components/author/AuthorPresentations.astro";
+import { authorsSidebar } from "@config/sidebar.mjs";
+import { getSortedAuthorKeys } from "@config/authorUtils.mjs";
 
 type AuthorKey = keyof typeof authors;
 

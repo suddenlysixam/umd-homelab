@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 import type { StarlightRouteData } from "@astrojs/starlight/route-data";
-import { isUpcoming } from "../../dateUtils";
+import { isUpcoming } from "@config/dateUtils";
 
 export async function onRequest(
     context: {

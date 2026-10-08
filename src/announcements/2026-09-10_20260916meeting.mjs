@@ -1,4 +1,4 @@
-import { withBase } from '../../config/basePath.mjs';
+import { withBase } from '@config/basePath.mjs';
 
 export default {
   id: '20260916meeting',

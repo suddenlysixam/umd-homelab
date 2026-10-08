@@ -1,6 +1,6 @@
 import starlightAnnouncement from 'starlight-announcement'
 
-const modules = import.meta.glob('../../src/announcements/*.mjs', {
+const modules = import.meta.glob('@announcements/*.mjs', {
   eager: true,
 });
 

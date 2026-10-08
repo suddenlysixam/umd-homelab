@@ -1,5 +1,5 @@
 import starlightUiTweaks from 'starlight-ui-tweaks'
-import { withBase } from '../basePath.mjs';
+import { withBase } from '@config/basePath.mjs';
 
 export const custom_starlightUiTweaks =
     starlightUiTweaks({

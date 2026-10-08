@@ -1,7 +1,7 @@
 import { slug } from 'github-slugger';
 
-import { authors } from './authors.mjs';
-import { getAuthorGroup, getSortedAuthorKeys } from './authorUtils.mjs';
+import { authors } from '@config/authors.mjs';
+import { getAuthorGroup, getSortedAuthorKeys } from '@config/authorUtils.mjs';
 
 const authorKeys = getSortedAuthorKeys();
 
