@@ -14,7 +14,7 @@ export const routeMiddleware = {
             });
 
             addRouteMiddleware({
-                entrypoint: "@config/plugins/middleware/meetingHeadingsMiddleware.ts",
+                entrypoint: "@config/plugins/middleware/meetingTOCMiddleware.ts",
                 order: "post",
             });
         },
