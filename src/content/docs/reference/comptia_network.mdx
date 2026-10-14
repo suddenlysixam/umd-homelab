@@ -1,0 +1,58 @@
+---
+title: CompTIA Network+
+description: A reference page for the CompTIA Network+ certification
+tags:
+    - certification
+    - networkplus
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { LinkButton } from '@astrojs/starlight/components';
+import { CardGrid } from '@astrojs/starlight/components';
+import { LinkCard } from '@astrojs/starlight/components';
+import { Icon } from '@astrojs/starlight/components';
+import ResourceCard from '@components/ResourceCard.astro';
+import PagesWithTagShowcase from '@components/PagesWithTagShowcase.astro';
+
+CompTIA Network+ is a vendor-neutral certification covering foundational networking concepts and skills, including network connectivity, services, operations, security, and troubleshooting.
+
+Build I.T. projects are not intended to replace dedicated certification study. Instead, many of our projects provide hands-on experience with technologies and concepts that also appear in Network+.
+
+## Certification Resources
+
+<CardGrid>
+    <LinkCard href="https://www.comptia.org/en-us/certifications/network/" title="CompTIA Network+ Certification" description="The official CompTIA Network+ certification page."/>
+    <LinkCard href="https://www.comptia.org/en-us/certifications/network/#objectives" title="Exam Objectives" description="Detailed objectives for the current Network+ exam."/>
+    <LinkCard href="https://www.comptia.org/en-us/resources/test-policies/candidate-testing-policies/" title="Testing Policies" description="Information on CompTIA exam policies and testing procedures."/>
+    <LinkCard href="https://www.comptia.org/en-us/resources/ce/learn/how-to-renew/" title="Renewing your CompTIA Certification" description="Information on the Continuing Education (CE) program and the process for renewing your CompTIA certification."/>
+</CardGrid>
+
+<Aside type="note" title="Exam Versions">
+CompTIA periodically updates the Network+ certification and its exam objectives. Use the official CompTIA resources linked above for current exam requirements, objectives, and policies.
+</Aside>
+
+### Student Discounts
+
+CompTIA offers academic pricing on certification exams and study materials to eligible students.
+
+<LinkCard href="https://www.comptia.org/en-us/academic/student/#student-purchasing" title="CompTIA Student Purchasing" description="Official page for information on student purchasing and academic discounts for CompTIA certifications and study materials."/>
+
+## Study Resources
+
+### Courses & Practice Exams
+
+<CardGrid>
+    <ResourceCard title="CompTIA Official Study Materials" description="Official CompTIA study materials for the Network+ certification." href="https://www.comptia.org/en-us/certifications/network/#buy-now" type="paid"/>
+    <ResourceCard title="Jason Dion's CompTIA Network+ Full Course & Practice Exam" description="CompTIA Network+ (N10-009) certification preparation course by Jason Dion" href="https://www.udemy.com/course/comptia-network-009/?couponCode=MT261012G1" type="paid"/>
+    <ResourceCard title="Professor Messer's Free Network+ Study Materials" description="Free study materials and resources for the Network+ (N10-009) certification by Professor Messer." href="https://www.professormesser.com/get-n10-009-network-plus-certified/" type="free"/>
+</CardGrid>
+
+<Aside type="tip" title="Contribute Study Resources">
+Have a study resource that you found useful that is not included here? Let us know in our [Discord](/discord) <Icon name="discord" color="var(--sl-color-accent)" class="inline-icon"/>.
+</Aside>
+
+### Build I.T. Projects
+
+Hands-on Build I.T. projects that can supplement Network+ study by providing practical experience with related concepts.
+
+<PagesWithTagShowcase tag="networkplus" />

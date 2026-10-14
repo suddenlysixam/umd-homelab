@@ -1,0 +1,58 @@
+---
+/**
+ * Component to display a list of pages tagged with a specific tag.
+ */
+import { getCollection } from "astro:content";
+import { withBase } from "@config/basePath.mjs";
+import { sortPagesByModifiedDate, getPagePath } from "@config/contentUtils.ts";
+import { LinkCard } from "@astrojs/starlight/components";
+// import PageLinkCard from "@components/PageLinkCard.astro";
+
+const { tag } = Astro.props;
+const normalizedTag = tag.toLowerCase();
+
+const pages = await getCollection("docs", ({ data }) => {
+  return data.tags?.some((pageTag) => pageTag.toLowerCase() === normalizedTag) && data.draft !== true;
+});
+
+const entries = sortPagesByModifiedDate(pages).map((page) => {
+  const titleText = page.id.startsWith("meetings/") ? (page.data.topic ?? page.data.title) : page.data.title;
+
+  const date = (typeof page.data.lastUpdated === "boolean" ? page.data.date : page.data.lastUpdated) ?? page.data.date;
+
+  const formattedDate = date?.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const dateText = formattedDate
+    ? `<i>${page.data.lastUpdated ? "Updated" : "Published"} ${formattedDate}</i>`
+    : undefined;
+
+  const descriptionText =
+    page.id.startsWith("meetings/") && page.data.title.localeCompare("") !== 0
+      ? "<i>Club Meeting which occurred on " + page.data.title + "</i>"
+      : [page.data.description, dateText].filter(Boolean).join('<div style="margin-top: 0.5rem;"></div>');
+
+  return {
+    title: titleText,
+    description: descriptionText,
+    href: withBase(getPagePath(page)),
+  };
+});
+---
+
+{
+  entries.length > 0 ? (
+    <div>
+      {entries.map((entry) => (
+        <LinkCard title={entry.title} description={entry.description} href={entry.href} />
+      ))}
+    </div>
+  ) : (
+    <p>
+      No pages found with the tag <code>{tag}</code>.
+    </p>
+  )
+}
