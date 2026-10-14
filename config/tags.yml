@@ -29,6 +29,18 @@ tags:
     color: "#3b82f6"
     icon: "🖥️"
 
+  certification:
+    label: "certification"
+    description: "Certification related topics"
+    color: "#ef4444"
+    icon: "🎓"
+
+  networkplus:
+    label: "networkplus"
+    description: "CompTIA Network+ certification related topics"
+    color: "#C8102E"
+    icon: "🎓"
+
   # getting-started:
   #   label: "Getting Started"
   #   description: "Essential first steps"
