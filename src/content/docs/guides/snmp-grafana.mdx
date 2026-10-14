@@ -1,0 +1,1203 @@
+---
+title: "SNMP with Grafana"
+description: "Guide on setting up SNMP monitoring with Grafana."
+date: 2026-10-14
+lastUpdated: 2026-10-14
+tags:
+  - network
+  - networkplus
+sidebar:
+  badge:
+      text: New
+      variant: success
+---
+
+import { Code, Aside, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
+import telegraf_conf from '@assets/files/projects/snmp-grafana/telegraf.conf?raw'
+import telegraf_dockerfile from '@assets/files/projects/snmp-grafana/Dockerfile?raw'
+import influxdb_env from '@assets/files/projects/snmp-grafana/env?raw'
+import compose_yml from '@assets/files/projects/snmp-grafana/compose.yml?raw'
+
+<div class="guide">
+
+## What you will need
+
+This project assumes that you have already followed our [Raspberry Pi installation](/guides/raspberrypi-os) project, and have the resulting configured Raspberry Pi. If you are installing on different hardware or a different OS, these steps may not all be the same for you.
+
+### System Preparation
+
+Before continuing with the project, make sure your system is up to date.
+
+```bash title="Updating System"
+sudo apt update
+sudo apt upgrade -y
+```
+
+Install a text editor of your choice. Here we use `vim` as an example.
+
+```bash title="Installing Vim"
+sudo apt install vim
+```
+
+## Concepts
+
+### What is Monitoring / Network Monitoring?
+
+Network monitoring is the process of continuously observing network devices, services, and traffic to understand their availability, health, and performance.
+
+A network administrator might want to know:
+
+* Is a device online?
+* Are its network interfaces up?
+* How much network traffic is it handling?
+* Is it experiencing errors or dropped packets?
+* How much CPU, memory, or storage is it using?
+* Has any of this changed over time?
+
+### Why monitor?
+
+Without monitoring, administrators may not know something is wrong until a user reports it.
+
+Monitoring allows administrators to:
+
+* Detect problems earlier
+* Identify unusual behavior
+* Compare current performance against normal performance
+* Track changes over time
+* Make decisions about capacity and upgrades
+
+<Aside title="Network+ term: Baseline" type="tip">
+A baseline represents the normal performance of a network or device. Current measurements can be compared against the baseline to identify unusual behavior.
+</Aside>
+
+## Raspberry Pi Networking Basics
+
+### ip command
+
+The `ip` command is a powerful tool for managing network interfaces, IP addresses, and routing on Linux systems. You can use it for things such as:
+
+* Viewing your IP address
+* Viewing network interface statuses
+* Viewing network statistics / traffic
+* etc.
+
+```bash title="ip Command Syntax"
+ip [ OPTIONS ] OBJECT { COMMAND | help }
+```
+
+Some objects you might commonly use with the `ip` command include:
+
+* `addr` - for managing IP addresses
+* `link` - for managing network interfaces
+* `route` - for managing routing tables
+
+Some options you might commonly use with the `ip` command include:
+
+* `-s` - show statistics
+* `-4` - use IPv4 only
+* `-6` - use IPv6 only
+
+Examples:
+
+<Tabs>
+<TabItem label="Command">
+```bash frame="none"
+ip addr show
+```
+</TabItem>
+<TabItem label="Example Output">
+```bash frame="none"
+itclub@monk:~ $ ip -4 addr show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+    inet 192.168.1.198/24 brd 192.168.1.255 scope global dynamic noprefixroute eth0
+       valid_lft 81398sec preferred_lft 81398sec
+itclub@monk:~ $ 
+```
+</TabItem>
+</Tabs>
+
+<Tabs>
+<TabItem label="Command">
+```bash frame="none"
+ip -s link
+```
+</TabItem>
+<TabItem label="Example Output">
+```bash frame="none"
+itclub@monk:~ $ ip -s link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    RX:  bytes packets errors dropped  missed   mcast           
+         62544     772      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+         62544     772      0       0       0       0 
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether d8:3a:dd:f8:f2:cf brd ff:ff:ff:ff:ff:ff
+    RX:  bytes packets errors dropped  missed   mcast           
+     411962531  307160      0       7       0    4325 
+    TX:  bytes packets errors dropped carrier collsns           
+       6213265   66544      0       0       0       0 
+3: wlan0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether d8:3a:dd:f8:f2:d1 brd ff:ff:ff:ff:ff:ff
+    RX:  bytes packets errors dropped  missed   mcast           
+             0       0      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0       0      0       0       0       0 
+itclub@monk:~ $ 
+```
+</TabItem>
+</Tabs>
+
+<Aside type="tip">
+There are a lot more things you can do with the `ip` command. Be sure to check the man pages for more details.
+
+```bash frame="none"
+man ip
+```
+
+</Aside>
+
+### Looking at our network statistics
+
+The Raspberry Pi already knows a lot about its network interfaces and traffic by default. From the output of `ip -s link`:
+
+```bash title="Example Output: ip -s link"
+itclub@monk:~ $ ip -s link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    RX:  bytes packets errors dropped  missed   mcast           
+         62544     772      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+         62544     772      0       0       0       0 
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether d8:3a:dd:f8:f2:cf brd ff:ff:ff:ff:ff:ff
+    RX:  bytes packets errors dropped  missed   mcast           
+     411962531  307160      0       7       0    4325 
+    TX:  bytes packets errors dropped carrier collsns           
+       6213265   66544      0       0       0       0 
+3: wlan0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether d8:3a:dd:f8:f2:d1 brd ff:ff:ff:ff:ff:ff
+    RX:  bytes packets errors dropped  missed   mcast           
+             0       0      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0       0      0       0       0       0 
+itclub@monk:~ $
+```
+
+We can see the statistics for each network interface, including:
+
+* Interface state
+* Bytes received (RX)
+* Bytes transmitted (TX)
+* Packets received/transmitted
+* Errors
+* Dropped packets
+
+And that's all well and good when we are manually inspecting network statistics on the Raspberry Pi. What if we had multiple Pis, or a whole fleet of devices to monitor? Manually logging into every device and checking each one would be impractical. And how could we collect this information over time in order to analyze trends and detect anomalies? This is where SNMP comes in handy, allowing us to programmatically query and monitor network statistics across devices.
+
+## SNMP
+
+### What is SNMP?
+
+**SNMP** stands for ***Simple Network Management Protocol***.
+
+It is an application-layer protocol used to monitor and manage network-connected devices, and can be supported by many different types of equipment.
+
+<Aside title="Network+ Port Numbers" type="tip">
+The default ports to know for SNMP are:
+- UDP 161 — SNMP queries
+- UDP 162 — SNMP notifications/traps
+</Aside>
+
+<Aside title="SNMPv3" type="note">
+SNMPv3 introduces enhanced security features compared to SNMPv1 and SNMPv2c, including authentication and encryption. For the purposes of this guide, we will focus on SNMPv2c, which is simpler to configure and sufficient for our locally restricted monitoring environment. In a production environment where SNMP traffic travels across a network, SNMPv3 is generally preferred.
+</Aside>
+
+#### SNMP Agent
+
+Software running on the device being monitored.
+
+The agent:
+
+* Collects information about the device
+* Makes that information available through SNMP
+* Responds to requests from an SNMP manager
+
+On our Raspberry Pi, we'll use `snmpd`.
+
+#### SNMP Manager
+
+The SNMP manager is the system that queries and collects information from SNMP agents.
+
+It is responsible for:
+
+* Sending requests to SNMP agents
+* Receiving responses from SNMP agents
+* Processing the returned management information
+
+SNMP managers are commonly part of network management and monitoring systems. In this project, we will eventually use Telegraf to automatically poll our SNMP agent and collect its metrics.
+
+For this guide, we will start by using SNMP tools such as `snmpwalk` and `snmpget` to manually query our Raspberry Pi, and then move to using Telegraf as our SNMP manager in combination with InfluxDB and Grafana to collect and visualize data from our Raspberry Pi devices.
+
+### Package Installation
+
+We will need the following packages to get started with SNMP:
+
+* `snmp`: Command-line tools (like snmpwalk, snmpget) used to query SNMP agents
+* `snmpd`: The SNMP agent daemon that runs on a background service to report stats from your machine
+* `snmp-mibs-downloader`: Installs standard, text-readable MIB files so you can query system metrics by name instead of numeric OID. This is particularly useful when using tools like `snmpwalk` and `snmpget` to make the output more human-readable.
+
+```bash title="Installing SNMP Packages"
+sudo apt install snmp snmpd snmp-mibs-downloader
+```
+
+### Verifying SNMP Agent Installation
+
+<Steps>
+
+1. Check that the agent is running:
+
+    <Tabs>
+    <TabItem label="Command">
+    ```bash title="snmpd Service Status"
+    sudo systemctl status snmpd
+    ```
+    </TabItem>
+    <TabItem label="Example Output">
+    ```bash title="snmpd Service Status Example"
+    itclub@monk:~ $ sudo systemctl status snmpd
+    ● snmpd.service - Simple Network Management Protocol (SNMP) Daemon.
+        Loaded: loaded (/usr/lib/systemd/system/snmpd.service; enabled; preset: enabled)
+        Active: active (running) since Wed 2026-10-14 02:07:25 EDT; 52min ago
+    Invocation: 855bc710bfc5492c9301114088a97160
+    Main PID: 15524 (snmpd)
+        Tasks: 1 (limit: 8796)
+            CPU: 3.004s
+        CGroup: /system.slice/snmpd.service
+                └─15524 /usr/sbin/snmpd -LOw -u Debian-snmp -g Debian-snmp -I -smux mteTrigger mteTriggerConf -f
+
+    Oct 14 02:07:25 monk systemd[1]: Starting snmpd.service - Simple Network Management Protocol (SNMP) Daemon....
+    Oct 14 02:07:25 monk systemd[1]: Started snmpd.service - Simple Network Management Protocol (SNMP) Daemon..
+    itclub@monk:~ $ 
+    ```
+    </TabItem>
+    </Tabs>
+
+1. Check where it's listening:
+
+    <Tabs>
+    <TabItem label="Command">
+    ```bash title="snmpd Listening Ports"
+    sudo ss -ulpn | grep snmpd
+    ```
+    </TabItem>
+    <TabItem label="Example Output">
+    ```bash title="snmpd Listening Ports Example"
+    itclub@monk:~ $ sudo ss -ulpn | grep snmpd
+    UNCONN 0      0                       127.0.0.1:161        0.0.0.0:*    users:(("snmpd",pid=15524,fd=6))                        
+    UNCONN 0      0                           [::1]:161              *:*    users:(("snmpd",pid=15524,fd=7))                        
+    itclub@monk:~ $ 
+    ```
+    </TabItem>
+    </Tabs>
+
+    You should see `127.0.0.1:161` and `[::1]:161` indicating that the SNMP daemon is listening on both IPv4 and IPv6 loopback addresses on port 161. This means that SNMP will only be accessible locally on the machine, which is fine for the purposes of this guide.
+
+</Steps>
+
+### Object Identifiers (OIDs)
+
+SNMP needs a standardized way to identify every piece of information that can be requested.
+
+It uses an ***Object Identifier***, or **OID**. 
+
+An OID is a globally unique identifier that represents a specific piece of information in the SNMP-managed device.
+
+OIDs are organized in a ***hierarchical tree structure***, and each node in the tree has a numeric identifier. By querying an OID, you can retrieve the corresponding value from the device. For example, `.1.3.6.1.2.1.1.5.0` is the OID for the system name of the device.
+
+```text
+1 - iso
+└── .3 - org
+    └── .6 - dod
+        └── .1 - internet
+            └── .2 - mgmt
+                └── .1 - mib-2
+                    ├── .1 - system
+                    │   ├── .1 - sysDescr
+                    │   ├── .3 - sysUpTime
+                    │   └── .5 - sysName
+                    └── .2 - interfaces
+```
+
+*Thats a lot of numbers*, so here is where MIBs come in.
+
+### Management Information Bases (MIBs)
+
+A Management Information Base (MIB) defines and describes objects that can be managed through SNMP. MIBs give meaningful names to OIDs.
+
+Instead of remembering:
+
+```text
+.1.3.6.1.2.1.1.5.0
+```
+
+we can use:
+
+```text
+SNMPv2-MIB::sysName.0
+```
+
+### snmpd
+
+#### Default Configuration
+
+The following is an example of the default configuration for snmpd (minus all the comments).
+
+```bash title="/etc/snmp/snmpd.conf"
+itclub@monk:~ $ sudo grep -vE '^\s*(#|$)' /etc/snmp/snmpd.conf
+sysLocation    Sitting on the Dock of the Bay
+sysContact     Me <me@example.org>
+sysServices    72
+master  agentx
+agentaddress  127.0.0.1,[::1]
+view   systemonly  included   .1.3.6.1.2.1.1
+view   systemonly  included   .1.3.6.1.2.1.25.1
+rocommunity  public default -V systemonly
+rocommunity6 public default -V systemonly
+rouser authPrivUser authpriv -V systemonly
+includeDir /etc/snmp/snmpd.conf.d
+itclub@monk:~ $ 
+```
+
+Some configuration options in the default snmpd.conf include:
+* `agentaddress  127.0.0.1,[::1]` - specifies the IP addresses and ports on which the SNMP agent listens for incoming requests. As mentioned earlier, for the purposes of this guide, local is sufficient.
+* `view systemonly included <OID>` - defines a view named `systemonly` that includes the specified OID subtree, allowing access to only the objects within that subtree.
+* `rocommunity public default -V systemonly` - defines a read-only community string `public` that has access to the `systemonly` view. This allows SNMP clients to query system-related information. A community string acts somewhat like a shared access string in SNMPv1/v2c, however it is sent without encryption. For SNMPv3, instead of a community string, you need to provide (with the `rouser` option) a username, password, and optionally an encryption key for secure communication, which is why we aren't using SNMPv3 in this guide.
+
+#### Editing the Configuration
+
+<Steps>
+
+1. Open the snmpd.conf file for editing using your preferred text editor (e.g., `vim`).
+
+    ```bash title="Editing /etc/snmp/snmpd.conf"
+    sudo vim /etc/snmp/snmpd.conf
+    ```
+
+1. Locate the `view systemonly ...` configuration and modify it to include the additional OID subtrees for system and host-related information by adding/editing the following lines:
+
+    ```bash title="/etc/snmp/snmpd.conf"
+    view   systemonly  included   .1.3.6.1.2.1.1
+    view   systemonly  included   .1.3.6.1.2.1.2
+    view   systemonly  included   .1.3.6.1.2.1.25
+    view   systemonly  included   .1.3.6.1.2.1.31
+    ```
+
+1. Restart the `snmpd` service to apply the changes.
+
+    ```bash title="Restarting snmpd"
+    sudo systemctl restart snmpd
+    ```
+
+1. Check the status of the `snmpd` service to ensure it is running correctly.
+
+    ```bash title="Checking snmpd status"
+    sudo systemctl status snmpd
+    ```
+
+</Steps>
+
+### Querying with SNMP tools
+
+* `snmpget`: retrieve individual management values using SNMP GET requests
+* `snmpwalk`: retrieve a subtree of management values using SNMP GETNEXT requests
+
+<Aside title="man pages for snmpget, snmpwalk, snmpcmd" type="tip">
+You can use the `man` command to read the manual pages for `snmpget` and `snmpwalk` to understand their usage and options.
+
+Some options are shared across these tools, and are viewable on the `snmpcmd` man page.
+
+```bash frame="none"
+man snmpget
+man snmpwalk
+man snmpcmd
+```
+</Aside>
+
+#### snmpget
+
+snmpget is used to retrieve individual management values using SNMP GET requests. It allows you to query specific OIDs or MIB names to get their current values.
+
+```bash title="snmpget Example"
+snmpget -v2c -c public localhost SNMPv2-MIB::sysName.0
+```
+
+Options used in the example:
+- `-v2c` specifies the SNMP version to use (in this case, SNMPv2c)
+- `-c public` specifies the community string (in this case, `public`)
+- `localhost` specifies the target host (in this case, the local machine)
+- `SNMPv2-MIB::sysName.0` specifies the OID (or MIB name) to query (in this case, the system name)
+
+Your output should show the system name of the local machine, which in this case is `monk`:
+
+```bash title="snmpget Output Example"
+itclub@monk:~ $ snmpget -v2c -c public localhost SNMPv2-MIB::sysName.0
+SNMPv2-MIB::sysName.0 = STRING: monk
+```
+
+<Aside title="Demonstrating what snmp-mibs-downloader does" type="tip">
+
+```bash title="Without MIBs"
+itclub@monk:~ $ snmpget -v2c -c public localhost .1.3.6.1.2.1.1.5.0
+iso.3.6.1.2.1.1.5.0 = STRING: "monk"
+```
+
+versus
+
+```bash title="With MIBs"
+itclub@monk:~ $ snmpget -v2c -c public localhost SNMPv2-MIB::sysName.0
+SNMPv2-MIB::sysName.0 = STRING: monk
+```
+
+</Aside>
+
+#### snmpwalk
+
+snmpwalk is used to retrieve a subtree of management values using SNMP GETNEXT requests. It allows you to query a range of OIDs or MIB names to get all the current values within that subtree.
+
+```bash title="snmpwalk Example"
+snmpwalk -v2c -c public localhost IF-MIB::ifDescr
+```
+
+See [snmpget](#snmpget) for a description of the options used.
+
+Your output should show the descriptions of all network interfaces on the local machine:
+
+```bash title="snmpwalk Output Example"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifDescr
+IF-MIB::ifDescr.1 = STRING: lo
+IF-MIB::ifDescr.2 = STRING: eth0
+IF-MIB::ifDescr.3 = STRING: wlan0
+itclub@monk:~ $ 
+```
+
+### Tables and Indexes
+
+SNMP commonly represents information about multiple similar objects using ***tables***.
+Each row in a table is uniquely identified by an ***index***, which allows you to correlate and retrieve specific information about that row across different columns in the SNMP table.
+
+So for example, when looking at the `IF-MIB::ifDescr` table, each network interface is associated with a unique index.
+
+```bash title="Indices of Network Interfaces"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifDescr
+IF-MIB::ifDescr.1 = STRING: lo
+IF-MIB::ifDescr.2 = STRING: eth0
+IF-MIB::ifDescr.3 = STRING: wlan0
+```
+
+```bash title="Network Interface Statuses"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifOperStatus
+IF-MIB::ifOperStatus.1 = INTEGER: up(1)
+IF-MIB::ifOperStatus.2 = INTEGER: up(1)
+IF-MIB::ifOperStatus.3 = INTEGER: down(2)
+```
+
+From these two commands, we can see that the network interface `eth0` is associated with the index `2`, and thus has a status of `up(1)`.
+
+### Queries of Interest
+
+Here are some SNMP queries of interest to monitor system and network information:
+
+#### System Information
+
+<Tabs>
+<TabItem label="Command">
+```bash title="System Name"
+snmpget -v2c -c public localhost SNMPv2-MIB::sysName.0
+```
+</TabItem>
+<TabItem label="Example Output">
+```bash title="System Name Example Output"
+itclub@monk:~ $ snmpget -v2c -c public localhost SNMPv2-MIB::sysName.0
+SNMPv2-MIB::sysName.0 = STRING: monk
+```
+</TabItem>
+</Tabs>
+
+#### Network Information
+
+<Tabs>
+<TabItem label="Command">
+```bash title="Network Interface Names"
+snmpwalk -v2c -c public localhost IF-MIB::ifDescr
+```
+
+```bash title="Network Interface Statuses"
+snmpwalk -v2c -c public localhost IF-MIB::ifOperStatus
+```
+
+```bash title="Network Interface Speed (in millions of bits per second)"
+snmpwalk -v2c -c public localhost IF-MIB::ifHighSpeed
+```
+
+<Aside type="note">
+Interface speed is not the same thing as current throughput. ifHighSpeed describes the interface's nominal bandwidth/capacity, while the traffic counters allow us to determine how much traffic is actually traversing it.
+</Aside>
+
+</TabItem>
+<TabItem label="Example Output">
+```bash title="Network Interface Names Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifDescr
+IF-MIB::ifDescr.1 = STRING: lo
+IF-MIB::ifDescr.2 = STRING: eth0
+IF-MIB::ifDescr.3 = STRING: wlan0
+```
+
+```bash title="Network Interface Statuses Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifOperStatus
+IF-MIB::ifOperStatus.1 = INTEGER: up(1)
+IF-MIB::ifOperStatus.2 = INTEGER: up(1)
+IF-MIB::ifOperStatus.3 = INTEGER: down(2)
+```
+
+```bash title="Network Interface Speed Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifHighSpeed
+IF-MIB::ifHighSpeed.1 = Gauge32: 10
+IF-MIB::ifHighSpeed.2 = Gauge32: 1000
+IF-MIB::ifHighSpeed.3 = Gauge32: 0
+```
+</TabItem>
+</Tabs>
+
+#### Network Information (Traffic)
+
+<Tabs>
+<TabItem label="Command">
+```bash title="Network Interface Inbound Traffic (Bytes Received)"
+snmpwalk -v2c -c public localhost IF-MIB::ifHCInOctets
+```
+
+```bash title="Network Interface Outbound Traffic (Bytes Transmitted)"
+snmpwalk -v2c -c public localhost IF-MIB::ifHCOutOctets
+```
+
+```bash title="Network Interface Inbound Errors (Packets with Errors)"
+snmpwalk -v2c -c public localhost IF-MIB::ifInErrors
+```
+
+```bash title="Network Interface Outbound Errors (Packets with Errors)"
+snmpwalk -v2c -c public localhost IF-MIB::ifOutErrors
+```
+
+```bash title="Network Interface Inbound Dropped/Discarded Packets"
+snmpwalk -v2c -c public localhost IF-MIB::ifInDiscards
+```
+
+```bash title="Network Interface Outbound Dropped/Discarded Packets"
+snmpwalk -v2c -c public localhost IF-MIB::ifOutDiscards
+```
+</TabItem>
+<TabItem label="Example Output">
+```bash title="Network Interface Inbound Traffic Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifHCInOctets
+IF-MIB::ifHCInOctets.1 = Counter64: 73370
+IF-MIB::ifHCInOctets.2 = Counter64: 416356208
+IF-MIB::ifHCInOctets.3 = Counter64: 0
+```
+
+```bash title="Network Interface Outbound Traffic Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifHCOutOctets
+IF-MIB::ifHCOutOctets.1 = Counter64: 73971
+IF-MIB::ifHCOutOctets.2 = Counter64: 7262031
+IF-MIB::ifHCOutOctets.3 = Counter64: 0
+```
+
+```bash title="Network Interface Inbound Errors Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifInErrors
+IF-MIB::ifInErrors.1 = Counter32: 0
+IF-MIB::ifInErrors.2 = Counter32: 0
+IF-MIB::ifInErrors.3 = Counter32: 0
+```
+
+```bash title="Network Interface Outbound Errors Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifOutErrors
+IF-MIB::ifOutErrors.1 = Counter32: 0
+IF-MIB::ifOutErrors.2 = Counter32: 0
+IF-MIB::ifOutErrors.3 = Counter32: 0
+```
+
+```bash title="Network Interface Inbound Dropped/Discarded Packets Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifInDiscards
+IF-MIB::ifInDiscards.1 = Counter32: 0
+IF-MIB::ifInDiscards.2 = Counter32: 35
+IF-MIB::ifInDiscards.3 = Counter32: 0
+```
+
+```bash title="Network Interface Outbound Dropped/Discarded Packets Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost IF-MIB::ifOutDiscards
+IF-MIB::ifOutDiscards.1 = Counter32: 0
+IF-MIB::ifOutDiscards.2 = Counter32: 0
+IF-MIB::ifOutDiscards.3 = Counter32: 0
+```
+</TabItem>
+</Tabs>
+
+<Aside title="Counters vs Rates" type="caution">
+SNMP provides counters for various metrics, such as bytes transmitted or received. These counters continuously increase over time. To understand the actual rate of change (e.g., network throughput), you need to calculate the difference between successive counter values over a specific time interval.
+
+So for example if two successive SNMP counter readings are taken 10 seconds apart:
+
+12:00:00  RX = 100,000,000 bytes \
+12:00:10  RX = 105,000,000 bytes
+
+5,000,000 bytes transferred in 10 seconds \
+= 500,000 bytes/second \
+= 4,000,000 bits/second \
+= 4 Mbps
+</Aside>
+
+<Aside title="SNMP Data Types" type="note">
+You may notice types such as INTEGER, Gauge32, Counter32, and Counter64 in SNMP output.
+- INTEGER — a numeric value, sometimes representing an enumerated state such as up(1).
+- Gauge32 — a value that can increase or decrease, such as interface speed.
+- Counter32 / Counter64 — counters that generally increase as events occur, such as bytes received or packets discarded.
+- STRING — text, such as an interface or system name.
+</Aside>
+
+#### Device Resources
+
+##### CPU Usage
+
+<Tabs>
+<TabItem label="Command">
+```bash title="CPU"
+snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrProcessorLoad
+```
+</TabItem>
+<TabItem label="Example Output">
+```bash title="CPU Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrProcessorLoad
+HOST-RESOURCES-MIB::hrProcessorLoad.196608 = INTEGER: 1
+HOST-RESOURCES-MIB::hrProcessorLoad.196609 = INTEGER: 0
+HOST-RESOURCES-MIB::hrProcessorLoad.196610 = INTEGER: 0
+HOST-RESOURCES-MIB::hrProcessorLoad.196611 = INTEGER: 1
+```
+
+<Aside title="CPU Indices" type="note">
+The processor indices may look unusual compared with our interface indices. These values are identifiers assigned by the agent, and the actual number of the index is not important as long as it uniquely identifies each processor.
+</Aside>
+
+</TabItem>
+</Tabs>
+
+##### Memory and Storage
+
+<Tabs>
+<TabItem label="Command">
+```bash title="Memory and Storage Descriptions"
+snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrStorageDescr
+```
+
+```bash title="Memory and Storage Sizes (Total Units)"
+snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrStorageSize
+```
+
+```bash title="Memory and Storage Sizes (Used Units)"
+snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrStorageUsed
+```
+
+```bash title="Memory and Storage Allocation (Bytes per Unit)"
+snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrStorageAllocationUnits
+```
+</TabItem>
+<TabItem label="Example Output">
+```bash title="Memory and Storage Descriptions Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrStorageDescr
+HOST-RESOURCES-MIB::hrStorageDescr.1 = STRING: Physical memory
+HOST-RESOURCES-MIB::hrStorageDescr.3 = STRING: Virtual memory
+HOST-RESOURCES-MIB::hrStorageDescr.6 = STRING: Memory buffers
+HOST-RESOURCES-MIB::hrStorageDescr.7 = STRING: Cached memory
+HOST-RESOURCES-MIB::hrStorageDescr.8 = STRING: Shared memory
+HOST-RESOURCES-MIB::hrStorageDescr.10 = STRING: Swap space
+HOST-RESOURCES-MIB::hrStorageDescr.11 = STRING: Available memory
+HOST-RESOURCES-MIB::hrStorageDescr.35 = STRING: /run
+HOST-RESOURCES-MIB::hrStorageDescr.36 = STRING: /
+HOST-RESOURCES-MIB::hrStorageDescr.38 = STRING: /dev/shm
+HOST-RESOURCES-MIB::hrStorageDescr.44 = STRING: /run/lock
+HOST-RESOURCES-MIB::hrStorageDescr.47 = STRING: /run/credentials/systemd-journald.service
+HOST-RESOURCES-MIB::hrStorageDescr.50 = STRING: /boot/firmware
+HOST-RESOURCES-MIB::hrStorageDescr.51 = STRING: /tmp
+HOST-RESOURCES-MIB::hrStorageDescr.53 = STRING: /run/user/1000
+HOST-RESOURCES-MIB::hrStorageDescr.54 = STRING: /run/credentials/getty@tty1.service
+```
+
+```bash title="Memory and Storage Size (Total Units) Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrStorageSize
+HOST-RESOURCES-MIB::hrStorageSize.1 = INTEGER: 8007388
+HOST-RESOURCES-MIB::hrStorageSize.3 = INTEGER: 10104536
+HOST-RESOURCES-MIB::hrStorageSize.6 = INTEGER: 8007388
+HOST-RESOURCES-MIB::hrStorageSize.7 = INTEGER: 2119016
+HOST-RESOURCES-MIB::hrStorageSize.8 = INTEGER: 144308
+HOST-RESOURCES-MIB::hrStorageSize.10 = INTEGER: 2097148
+HOST-RESOURCES-MIB::hrStorageSize.11 = INTEGER: 7370944
+HOST-RESOURCES-MIB::hrStorageSize.35 = INTEGER: 400370
+HOST-RESOURCES-MIB::hrStorageSize.36 = INTEGER: 30581889
+HOST-RESOURCES-MIB::hrStorageSize.38 = INTEGER: 1000923
+HOST-RESOURCES-MIB::hrStorageSize.44 = INTEGER: 1280
+HOST-RESOURCES-MIB::hrStorageSize.47 = INTEGER: 256
+HOST-RESOURCES-MIB::hrStorageSize.50 = INTEGER: 1032408
+HOST-RESOURCES-MIB::hrStorageSize.51 = INTEGER: 1000924
+HOST-RESOURCES-MIB::hrStorageSize.53 = INTEGER: 200184
+HOST-RESOURCES-MIB::hrStorageSize.54 = INTEGER: 256
+```
+
+```bash title="Memory and Storage Size (Used Units) Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrStorageUsed
+HOST-RESOURCES-MIB::hrStorageUsed.1 = INTEGER: 2582884
+HOST-RESOURCES-MIB::hrStorageUsed.3 = INTEGER: 2582884
+HOST-RESOURCES-MIB::hrStorageUsed.6 = INTEGER: 73484
+HOST-RESOURCES-MIB::hrStorageUsed.7 = INTEGER: 2119016
+HOST-RESOURCES-MIB::hrStorageUsed.8 = INTEGER: 144308
+HOST-RESOURCES-MIB::hrStorageUsed.10 = INTEGER: 0
+HOST-RESOURCES-MIB::hrStorageUsed.11 = INTEGER: 0
+HOST-RESOURCES-MIB::hrStorageUsed.35 = INTEGER: 2349
+HOST-RESOURCES-MIB::hrStorageUsed.36 = INTEGER: 1790266
+HOST-RESOURCES-MIB::hrStorageUsed.38 = INTEGER: 55
+HOST-RESOURCES-MIB::hrStorageUsed.44 = INTEGER: 4
+HOST-RESOURCES-MIB::hrStorageUsed.47 = INTEGER: 0
+HOST-RESOURCES-MIB::hrStorageUsed.50 = INTEGER: 163107
+HOST-RESOURCES-MIB::hrStorageUsed.51 = INTEGER: 1
+HOST-RESOURCES-MIB::hrStorageUsed.53 = INTEGER: 16
+HOST-RESOURCES-MIB::hrStorageUsed.54 = INTEGER: 0
+```
+
+```bash title="Memory and Storage Allocation (Bytes per Unit) Example Output"
+itclub@monk:~ $ snmpwalk -v2c -c public localhost HOST-RESOURCES-MIB::hrStorageAllocationUnits
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.1 = INTEGER: 1024 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.3 = INTEGER: 1024 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.6 = INTEGER: 1024 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.7 = INTEGER: 1024 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.8 = INTEGER: 1024 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.10 = INTEGER: 1024 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.11 = INTEGER: 1024 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.35 = INTEGER: 4096 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.36 = INTEGER: 4096 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.38 = INTEGER: 4096 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.44 = INTEGER: 4096 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.47 = INTEGER: 4096 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.50 = INTEGER: 512 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.51 = INTEGER: 4096 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.53 = INTEGER: 4096 Bytes
+HOST-RESOURCES-MIB::hrStorageAllocationUnits.54 = INTEGER: 4096 Bytes
+```
+</TabItem>
+</Tabs>
+
+### The Problem With What We're Doing
+
+Manually retrieving system information using SNMP commands like `snmpget` and `snmpwalk` is not scalable. For a single device, and for looking at the system's status at a specific point in time, it might be feasible. However, this approach quickly becomes cumbersome as the number of devices increases or when continuous monitoring is required.
+
+We need something to:
+* Query SNMP automatically
+* Query it repeatedly at regular intervals over time
+* Store the collected data
+* Calculate changes over time
+* Visualize the results
+
+This is where automated monitoring solutions like Telegraf, InfluxDB, and Grafana come into play, allowing for continuous data collection, storage, and visualization across multiple devices.
+
+## Install and Configure Docker
+
+To run Telegraf, InfluxDB, and Grafana in a consistent and isolated environment, we can use Docker. Docker allows us to containerize these applications, making it easier to deploy and manage them without worrying about dependencies and system configurations.
+
+See our [portainer](/guides/portainer/) guide for a more comprehensive explanation of Docker and container management.
+
+<Steps>
+
+1. [Install Docker](https://docs.docker.com/engine/install/debian/)
+1. Verify that Docker is installed correctly:
+
+    ```bash
+    docker --version
+    ```
+
+    ```bash
+    docker compose version
+    ```
+
+1. Verify that the `docker` group exists:
+
+    ```bash
+    cat /etc/group | grep docker
+    ```
+
+    If it does not exist, you may need to create it:
+
+    ```bash
+    sudo groupadd docker
+    ```
+
+1. Add your user to the `docker` group:
+
+    ```bash
+    sudo usermod -aG docker $USER
+    ```
+
+1. Log out and log back in for the group changes to take effect, or run `newgrp docker` to apply the changes immediately. You can use the command `groups` to verify your group membership.
+
+1. Verify that you can run Docker commands without `sudo`:
+
+    ```bash
+    docker run hello-world
+    ```
+
+1. (Optional) Configure Docker to start on boot:
+
+    ```bash
+    sudo systemctl enable docker.service
+    sudo systemctl enable containerd.service
+    ```
+
+</Steps>
+
+## Telegraf, InfluxDB, and Grafana Configuration
+
+The stack we are building:
+
+* `snmpd`: snmp agent running on the host, which exposes system information via SNMP on port 161 for Telegraf to collect
+* `Telegraf`: collects metrics from snmpd and sends them to InfluxDB
+* `InfluxDB`: stores the collected metrics in a time-series database
+* `Grafana`: visualizes the metrics stored in InfluxDB through dashboards
+
+<Steps>
+
+1. Make a project directory
+
+    <FileTree>
+    - **snmp-monitoring/**
+        - **telegraf/**
+    </FileTree>
+
+    ```bash frame="none"
+    mkdir -p ~/snmp-monitoring/telegraf
+    ```
+
+    ```bash frame="none"
+    cd ~/snmp-monitoring
+    ```
+
+1. Create the InfluxDB environment file
+
+    <FileTree>
+    - snmp-monitoring/
+        - **.env**
+        - telegraf/
+    </FileTree>
+
+    The `.env` file will contain the credentials/settings to be shared between the services, such as InfluxDB username, password, and bucket name.
+    
+    ```bash frame="none"
+    vim .env
+    ```
+
+    <Code code={influxdb_env} lang="bash" title="snmp-monitoring/.env" />
+
+    <Aside title="Configure Real Values" type="danger">We are going to use bad values for the sake of this guide, meaning that the credentials and bucket name are not secure and should not be used in a production environment. This is purely for demonstration purposes.</Aside>
+
+1. Create the Telegraf configuration file
+
+    <FileTree>
+    - snmp-monitoring/
+        - .env
+        - telegraf/
+            - **telegraf.conf**
+    </FileTree>
+
+    The Telegraf configuration file `telegraf.conf` defines what metrics to collect and where to send them. In this case, we are going to input from SNMP and output to InfluxDB.
+
+    ```bash frame="none"
+    vim telegraf/telegraf.conf
+    ```
+
+    <Code code={telegraf_conf} lang="toml" title="snmp-monitoring/telegraf/telegraf.conf" />
+
+1. Create the Telegraf Dockerfile
+
+    <FileTree>
+    - snmp-monitoring/
+        - .env
+        - telegraf/
+            - **Dockerfile**
+            - telegraf.conf
+    </FileTree>
+
+    The Telegraf `Dockerfile` will define the environment for running Telegraf, including the base image and the downloading of the MIB files to make our lives easier.
+
+    ```bash frame="none"
+    vim telegraf/Dockerfile
+    ```
+
+    <Code code={telegraf_dockerfile} lang="dockerfile" title="snmp-monitoring/telegraf/Dockerfile" />
+
+1. Create the Docker Compose file
+
+    <FileTree>
+    - snmp-monitoring/
+        - .env
+        - **compose.yml**
+        - telegraf/
+            - Dockerfile
+            - telegraf.conf
+    </FileTree>
+
+    The Docker `compose.yml` file will define and connect the services for the monitoring stack (`InfluxDB`, `Telegraf`, and `Grafana`). It will specify the images, environment variables, volumes, and network settings required for each service.
+
+    ```bash frame="none"
+    vim compose.yml
+    ```
+
+    <Code code={compose_yml} lang="yml" title="snmp-monitoring/compose.yml" />
+
+1. Start the monitoring stack
+
+    Now that you have the following file structure:
+
+    <FileTree>
+    - snmp-monitoring/
+        - .env
+        - compose.yml
+        - telegraf/
+            - Dockerfile
+            - telegraf.conf
+    </FileTree>
+
+    Start the monitoring stack using Docker Compose:
+
+    ```bash frame="none"
+    docker compose up -d
+    ```
+
+</Steps>
+
+### Grafana Web Interface
+
+Once the monitoring stack is up and running, you can access the Grafana web interface to visualize the collected metrics.
+
+<Steps>
+1. Open your web browser and navigate to `http://localhost:3000`.
+1. Log in using the default username and password:
+   - Username: `admin`
+   - Password: `admin`
+1. You will be prompted to change the password after the first login.
+1. Add InfluxDB as a data source in Grafana using the credentials and bucket name specified in your `.env` file.
+
+    * Query language: `Flux`
+    * URL: `http://influxdb:8086`
+    * Organization: `buildit`
+    * Token: `buildit-monitoring-token`
+    * Default Bucket: `network`
+
+    <img src="/images/projects/snmp-grafana/add_datasource.png" alt="Add InfluxDB Data Source in Grafana" />
+
+    Click `Save & Test` to verify the connection to InfluxDB.
+
+    <img src="/images/projects/snmp-grafana/datasource_savetest.png" alt="Save & Test InfluxDB Data Source in Grafana" />
+
+1. Create a dashboard to visualize the SNMP metrics collected by Telegraf. 
+
+    <img src="/images/projects/snmp-grafana/create_dashboard.png" alt="Create a Dashboard in Grafana" />
+
+1. Add panels to the dashboard to display different types of data, such as network traffic, CPU usage, and memory utilization.
+
+    <img src="/images/projects/snmp-grafana/add_panels.png" alt="Add Panels to the Dashboard in Grafana" />
+
+    <Aside type="note">When you write or update your queries, hit the `Refresh` button in Grafana to see the updated results.</Aside>
+
+    The full documentation for creating dashboards and panels in Grafana can be found in the [Grafana documentation](https://grafana.com/docs/grafana/latest/fundamentals/getting-started/first-dashboards/).
+
+    The queries below are some examples that retrieve the SNMP metrics collected by Telegraf from InfluxDB for a panel. Some metrics can be displayed directly, while others need to be calculated or converted before they are useful for visualization.
+
+    ##### System Uptime
+    ```text title="System Uptime"
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "snmp")
+    |> filter(fn: (r) => r._field == "uptime")
+    |> last()
+    |> map(fn: (r) => ({ r with _value: float(v: r._value) / 100.0 }))
+    ```
+
+    ##### CPU Utilization
+    `hrProcessorLoad` (and consequently the `cpu` and `load_percent` data we are importing to InfluxDB) reports utilization separately for each logical processor. This query retrieves the latest reading for each processor and calculates their mean to produce an overall CPU utilization percentage.
+
+    ```text title="Current CPU Utilization"
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "cpu")
+    |> filter(fn: (r) => r._field == "load_percent")
+    |> last()
+    |> group()
+    |> mean()
+    ```
+
+    ##### Memory Utilization
+    Linux uses otherwise-unused memory for caching, so the amount of memory marked as “used” does not necessarily represent memory pressure. Instead, we'll calculate utilization using available memory:
+    
+    **Memory Utilization = (1 − Available Memory / Total Physical Memory) × 100**
+
+    ```text title="Memory Utilization"
+    total = from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "storage")
+    |> filter(fn: (r) => r.storage == "Physical memory")
+    |> filter(fn: (r) => r._field == "size")
+    |> last()
+    |> findRecord(fn: (key) => true, idx: 0)
+
+    available = from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "storage")
+    |> filter(fn: (r) => r.storage == "Available memory")
+    |> filter(fn: (r) => r._field == "size")
+    |> last()
+    |> findRecord(fn: (key) => true, idx: 0)
+
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "storage")
+    |> filter(fn: (r) => r.storage == "Physical memory")
+    |> filter(fn: (r) => r._field == "size")
+    |> last()
+    |> map(fn: (r) => ({
+        r with
+        _value: (1.0 - (float(v: available._value) / float(v: total._value))) * 100.0
+    }))
+    ```
+
+    ##### Disk Utilization
+    **Disk Utilization = Used Space / Total Space × 100**
+
+    ```text title="Disk Utilization"
+    size = from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "storage")
+    |> filter(fn: (r) => r.storage == "/")
+    |> filter(fn: (r) => r._field == "size")
+    |> last()
+    |> findRecord(fn: (key) => true, idx: 0)
+
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "storage")
+    |> filter(fn: (r) => r.storage == "/")
+    |> filter(fn: (r) => r._field == "used")
+    |> last()
+    |> map(fn: (r) => ({
+        r with
+        _value: float(v: r._value) / float(v: size._value) * 100.0
+    }))
+    ```
+
+    ##### Network Interface Status
+    ```text title="Status of Network Interface eth0"
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "interface")
+    |> filter(fn: (r) => r.interface == "eth0")
+    |> filter(fn: (r) => r._field == "status")
+    |> last()
+    ```
+
+    ##### Network Interface Speed
+    ```text title="eth0 Speed Capacity"
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "interface")
+    |> filter(fn: (r) => r.interface == "eth0")
+    |> filter(fn: (r) => r._field == "speed_mbps")
+    |> last()
+    ```
+
+    ##### Network Traffic
+    Earlier, we calculated a traffic rate by finding the difference between two SNMP counter readings over time. The derivative() function performs that calculation automatically. Because ifHCInOctets and ifHCOutOctets count bytes, multiplying the resulting bytes-per-second value by 8 converts it to bits per second.
+
+    <Tabs>
+    <TabItem label="Query A">
+    ```text title="eth0 Inbound Traffic"
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "interface")
+    |> filter(fn: (r) => r.interface == "eth0")
+    |> filter(fn: (r) => r._field == "in_octets")
+    |> derivative(unit: 1s, nonNegative: true)
+    |> map(fn: (r) => ({
+        r with
+        _value: float(v: r._value) * 8.0
+    }))
+    |> set(key: "_field", value: "Inbound")
+    |> keep(columns: ["_time", "_value", "_field"])
+    ```
+    </TabItem>
+    <TabItem label="Query B">
+    ```text title="eth0 Outbound Traffic"
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "interface")
+    |> filter(fn: (r) => r.interface == "eth0")
+    |> filter(fn: (r) => r._field == "out_octets")
+    |> derivative(unit: 1s, nonNegative: true)
+    |> map(fn: (r) => ({
+        r with
+        _value: float(v: r._value) * 8.0
+    }))
+    |> set(key: "_field", value: "Outbound")
+    |> keep(columns: ["_time", "_value", "_field"])
+    ```
+    </TabItem>
+    </Tabs>
+
+    ##### Network Errors and Discards
+    ```text title="eth0 Errors and Discards"
+    from(bucket: "network")
+    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+    |> filter(fn: (r) => r._measurement == "interface")
+    |> filter(fn: (r) => r.interface == "eth0")
+    |> filter(fn: (r) =>
+        r._field == "in_errors" or
+        r._field == "out_errors" or
+        r._field == "in_discards" or
+        r._field == "out_discards"
+    )
+    |> derivative(unit: 1s, nonNegative: true)
+    |> keep(columns: ["_time", "_value", "_field"])
+    ```
+    
+
+</Steps>
+
+### Test Your Dashboard
+
+#### Generate some traffic
+
+Use CloudFlare's speed test to generate network traffic:
+
+```bash
+curl -o /dev/null https://speed.cloudflare.com/__down?bytes=100000000
+```
+
+#### Generate some memory usage
+
+Make Python eat our memory:
+
+```bash
+python3 -c "import time; x = b'x' * 3_000_000_000; time.sleep(60)"
+```
+
+<Aside type="danger">
+This example allocates approximately 3 GB of memory. If your Raspberry Pi has less available memory, reduce this value.
+</Aside>
+
+</div>
