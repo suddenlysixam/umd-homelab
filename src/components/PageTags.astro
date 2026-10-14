@@ -1,0 +1,162 @@
+---
+/**
+ * Copied from starlight-tags plugin and modified to work for a given page instead of the current one
+ * PageTags: Auto-displays tags for the current page
+ *
+ * Usage in MDX:
+ * ```mdx
+ * ---
+ * title: My Page
+ * tags: [php, security]
+ * ---
+ * import { PageTags } from 'starlight-tags/components';
+ *
+ * <PageTags path="/guides/dns/" />
+ *
+ * Your content here...
+ * ```
+ */
+import { TagBadge } from "starlight-tags/components";
+// @ts-expect-error Provided by starlight-tags integration at runtime.
+import type { ProcessedTag } from "starlight-tags/schemas/tags.js";
+import { getCollection } from "astro:content";
+
+// Type for accessing Starlight's internal route data
+// This matches Starlight's locals structure for route data
+interface StarlightLocals {
+  starlightRoute?: {
+    entry?: {
+      data?: {
+        tags?: string[];
+        hideTags?: boolean;
+      };
+    };
+  };
+}
+
+interface Props {
+  /** Route path of the page whose tags should be displayed */
+  path?: string;
+  /** Position of tags: 'inline' flows with text, 'block' takes full width */
+  layout?: "inline" | "block";
+  /** Visual style of tag badges */
+  variant?: "solid" | "outline" | "ghost";
+  /** Size of tag badges */
+  size?: "small" | "medium" | "large";
+  /** Show tag icons */
+  showIcon?: boolean;
+  /** Optional label before tags. Pass `true` to use the localized default label, or a string for custom label */
+  label?: string | boolean;
+  /** Frontmatter data passed explicitly (optional, falls back to Starlight route data) */
+  frontmatter?: {
+    tags?: string[];
+  };
+}
+
+const { path, layout = "inline", variant = "outline", size = "small", showIcon = true, label } = Astro.props;
+
+// Get tags from middleware-injected data
+// @ts-expect-error Provided by starlight-tags integration at runtime.
+const tagsData = Astro.locals.starlightTags;
+if (!tagsData) {
+  throw new Error(
+    "[starlight-tags] Tag data not available. " +
+      "Ensure the starlight-tags plugin is configured correctly in astro.config.mjs.",
+  );
+}
+const { tags } = tagsData;
+
+// Access translations via Astro.locals.t
+const t = Astro.locals.t;
+
+// Resolve the label: use translated default if `true`, custom string if provided, or undefined
+const displayLabel = label === true ? t("starlightTags.pageTags") : typeof label === "string" ? label : undefined;
+
+// Get frontmatter tags from the current page
+// A supplied path resolves the content entry; otherwise use Starlight's current route.
+const starlightLocals = Astro.locals as StarlightLocals;
+const normalizePath = (value: string) => {
+  let normalizedPath = value.split("/").filter(Boolean).join("/");
+  if (normalizedPath.endsWith(".md") || normalizedPath.endsWith(".mdx")) {
+    normalizedPath = normalizedPath.slice(0, normalizedPath.lastIndexOf("."));
+  }
+  if (normalizedPath === "index") return "";
+  return normalizedPath.endsWith("/index") ? normalizedPath.slice(0, -6) : normalizedPath;
+};
+const targetPath = path === undefined ? undefined : normalizePath(path);
+const targetEntry =
+  targetPath !== undefined
+    ? (await getCollection("docs")).find((entry) => normalizePath(entry.id) === targetPath)
+    : undefined;
+const pageData = targetEntry?.data ?? (path === undefined ? starlightLocals.starlightRoute?.entry?.data : undefined);
+const frontmatterTags: string[] = Astro.props.frontmatter?.tags ?? pageData?.tags ?? [];
+
+// Check if tags should be hidden on this page
+const hideTags = pageData?.hideTags ?? false;
+
+// Fetch processed tags from middleware data
+const pageTags: ProcessedTag[] = frontmatterTags
+  .map((tagId) => tags.get(tagId))
+  .filter((t): t is ProcessedTag => t !== undefined);
+---
+
+{
+  !hideTags && pageTags.length > 0 && (
+    <nav
+      class:list={["fb-page-tags", `fb-page-tags--${layout}`]}
+      aria-label={displayLabel || t("starlightTags.pageTags")}
+    >
+      {displayLabel && (
+        <span class="fb-page-tags__label" aria-hidden="true">
+          {displayLabel}
+        </span>
+      )}
+      <ul class="fb-page-tags__list" role="list">
+        {pageTags.map((tag) => (
+          <li class="fb-page-tags__item">
+            <TagBadge tag={tag} variant={variant} size={size} showIcon={showIcon} />
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .fb-page-tags {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .fb-page-tags--block {
+    margin: 1rem 0;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--sl-color-hairline);
+    border-bottom: 1px solid var(--sl-color-hairline);
+  }
+
+  .fb-page-tags--inline {
+    display: inline-flex;
+  }
+
+  .fb-page-tags__label {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+    font-weight: 500;
+  }
+
+  .fb-page-tags__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .fb-page-tags__item {
+    display: contents;
+  }
+</style>

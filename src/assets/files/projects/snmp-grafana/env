@@ -1,0 +1,5 @@
+INFLUXDB_USERNAME=buildit
+INFLUXDB_PASSWORD=buildit-monitoring
+INFLUXDB_ORG=buildit
+INFLUXDB_BUCKET=network
+INFLUXDB_TOKEN=buildit-monitoring-token

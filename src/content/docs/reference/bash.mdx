@@ -1,0 +1,247 @@
+---
+title: Bash
+description: A reference page for the Bash shell
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+[Bash](https://www.gnu.org/software/bash/) is a command-line shell commonly used on Linux systems. It allows you to interact with your computer by entering commands into a terminal.
+
+On Raspberry Pi OS, Bash is available by default.
+
+## Getting Started
+
+When you open a terminal, Bash displays a **command prompt** indicating that it is ready for you to enter a command.
+
+The appearance of the prompt varies between systems and can be customized. For example, a prompt might display information such as your username, hostname, or current directory. This could look like:
+
+```text
+username@hostname:~ $
+```
+
+Type a command and press `Enter` to run it.
+
+## Paths
+
+A **path** describes the location of a file or directory.
+
+An **absolute path** starts from the root directory `/`:
+
+```text
+/home/username/Documents
+```
+
+A **relative path** starts from your current directory:
+
+```text
+Documents/example.txt
+```
+
+The following have special meanings:
+
+| Path | Meaning                                                          |
+| ---- | ---------------------------------------------------------------- |
+| `.`  | Current directory                                                |
+| `..` | Parent directory (one directory above your current directory)    |
+| `~`  | Your home directory                                              |
+| `/`  | Root directory                                                   |
+
+## Directories (Folders)
+
+### Current Directory
+
+Your **current directory** is the directory you are currently working in.
+
+To see your current directory:
+
+```bash
+pwd
+```
+
+### Listing Directory Contents
+
+To see the files and directories inside it:
+
+```bash
+ls
+```
+
+To include hidden files:
+
+```bash
+ls -a
+```
+
+### Moving to Different Directories
+
+Use `cd` to move to a different directory:
+
+```bash
+cd directory
+```
+
+For example:
+
+```bash
+cd Documents
+```
+
+### Creating Directories
+
+Create a directory with `mkdir`:
+
+```bash
+mkdir example
+```
+
+### Removing Directories
+
+Remove an empty directory:
+
+```bash
+rmdir example
+```
+
+## Files
+
+### Viewing a File
+
+Display the contents of a text file:
+
+```bash
+cat example.txt
+```
+
+For longer files, you can use:
+
+```bash
+less example.txt
+```
+
+Use the arrow keys to move through the file and press `q` to quit.
+
+### Editing a File
+
+There are multiple text editors available in the terminal. One example is Vim. You can open a text file in Vim with:
+
+```bash
+vim example.txt
+```
+
+See the [Vim reference](/reference/vim/) for the commands needed to edit, save, and quit.
+
+### Copying and Moving
+
+Copy a file:
+
+```bash
+cp source destination
+```
+
+For example:
+
+```bash
+cp example.txt backup.txt
+```
+
+Move a file:
+
+```bash
+mv example.txt Documents/
+```
+
+`mv` can also be used to rename a file:
+
+```bash
+mv example.txt renamed.txt
+```
+
+### Removing Files
+
+Remove a file:
+
+```bash
+rm example.txt
+```
+
+<Aside type="caution">
+Files removed with `rm` are not moved to a trash or recycle bin. Make sure you are removing the correct file before running the command.
+</Aside>
+
+## Running Commands
+
+### Running Commands as Administrator
+
+Some system changes require administrator privileges. Use `sudo` before a command to run it with elevated privileges:
+
+```bash
+sudo command
+```
+
+For example:
+
+```bash
+sudo apt update
+```
+
+You may be asked for your password.
+
+<Aside type="caution">
+Commands run with `sudo` have elevated privileges and can make system-wide changes. Make sure you understand a command before running it with `sudo`.
+</Aside>
+
+### Stopping a Command
+
+To interrupt a command that is currently running:
+
+```text
+Ctrl+C
+```
+
+This is useful when a command is hanging or when you need to stop a running program.
+
+## Making Your Life Easier
+
+### Tab Completion
+
+Press `Tab` while typing to automatically complete commands, file names, and directory names when possible.
+
+For example, if the current directory contains a directory named `Documents`, you could type:
+
+```bash
+cd Doc
+```
+
+Then press `Tab` to complete it:
+
+```bash
+cd Documents/
+```
+
+If there is more than one possible match, press `Tab` again to display the available options.
+
+### Command History
+
+Use the **Up** and **Down** arrow keys to move through commands you have previously entered.
+
+To display your command history:
+
+```bash
+history
+```
+
+This displays previously entered commands along with their history numbers.
+
+## TL;DR: The Bare Minimum
+
+| Command                 | Action                                   |
+| ----------------------- | ---------------------------------------- |
+| `pwd`                   | Show where you are                       |
+| `ls`                    | Show what's here                         |
+| `cd directory`          | Change directory                         |
+| `mkdir name`            | Create a directory                       |
+| `cat file`              | Display a file                           |
+| `vim file`              | Edit a file using [Vim](/reference/vim/) |
+| `rm file`               | Remove a file                            |
+| `sudo command`          | Run a command with elevated privileges   |
+| `Ctrl+C`                | Stop a running command                   |

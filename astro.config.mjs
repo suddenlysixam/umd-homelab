@@ -75,5 +75,10 @@ export default defineConfig({
             routeMiddleware,
         ],
 		}),
-        icon()],
+        icon({
+            include: {
+                mdi: ['calendar', 'location-on-outline', 'text-subject'],
+                'game-icons': ['turtle-shell']
+            }
+        })],
 });
