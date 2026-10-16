@@ -69,6 +69,11 @@
   border-top: 1px solid rgba(22, 135, 124, 0.14);
 }
 
+.meeting-actions div {
+  display: block;
+  margin-top: 1rem;
+}
+
 .meeting-icon {
   width: 0.95rem;
   height: 0.95rem;
