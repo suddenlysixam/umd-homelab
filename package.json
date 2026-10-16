@@ -25,7 +25,8 @@
     "starlight-showcases": "^0.3.2",
     "starlight-sidebar-topics": "^0.9.0",
     "starlight-tags": "^2.0.0",
-    "starlight-ui-tweaks": "^0.2.2"
+    "starlight-ui-tweaks": "^0.2.2",
+    "starlight-view-modes": "^0.15.3"
   },
   "allowScripts": {
     "esbuild": true,

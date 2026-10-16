@@ -13,6 +13,7 @@ import { custom_starlightTags } from '@plugins/custom_starlightTags.mjs'
 import { custom_starlightUiTweaks } from '@plugins/custom_starlightUiTweaks.mjs'
 import { custom_starlightAnnouncement } from '@plugins/custom_starlightAnnouncement.mjs';
 import { custom_starlightSidebarTopics } from '@plugins/custom_starlightSidebarTopics.mjs';
+import { custom_starlightViewModes } from '@plugins/custom_starlightViewModes.mjs';
 
 // Custom plugins
 import { routeMiddleware } from '@plugins/routeMiddleware.mjs';
@@ -51,7 +52,7 @@ export default defineConfig({
             '@styles/color-themes/terminal/color-theme-terminal.css',
             '@styles/custom-base.css',
             '@styles/meeting-cards.css',
-            '@styles/guides.css',
+            '@styles/media.css',
         ],
         components: {
             SiteTitle: '@components/overrides/SiteTitleOverride.astro',
@@ -72,6 +73,7 @@ export default defineConfig({
             custom_starlightAnnouncement,
             custom_starlightSidebarTopics,
             custom_starlightTags, // must be listed after 'custom_starlightSidebarTopics'
+            custom_starlightViewModes,
             routeMiddleware,
         ],
 		}),
