@@ -4,10 +4,12 @@
  */
 import StarlightPageTitle from "@astrojs/starlight/components/PageTitle.astro";
 import { PageTags } from "starlight-tags/components";
+import StarlightViewModesPageTitle from "starlight-view-modes/components/PageTitle.astro";
 ---
 
 <StarlightPageTitle {...Astro.props} />
 <PageTags layout="inline" variant="outline" size="small" showIcon={true} label={false} />
+<StarlightViewModesPageTitle />
 
 <style>
   /* Optional: Add spacing between title and tags */

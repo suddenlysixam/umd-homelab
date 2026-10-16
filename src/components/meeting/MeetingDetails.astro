@@ -69,16 +69,18 @@ const endTime = format24HourTime(endDateObj);
   {
     upcoming && (
       <div class="meeting-actions">
-        <AddToCalendarButton
-          name="Build I.T. Club at UMD Meeting"
-          description={frontmatter.topic ?? ""}
-          location={frontmatter.location ?? ""}
-          startDate={startDate}
-          endDate={endDate}
-          startTime={startTime}
-          endTime={endTime}
-          timeZone={DEFAULT_TIME_ZONE}
-        />
+        <div>
+          <AddToCalendarButton
+            name="Build I.T. Club at UMD Meeting"
+            description={frontmatter.topic ?? ""}
+            location={frontmatter.location ?? ""}
+            startDate={startDate}
+            endDate={endDate}
+            startTime={startTime}
+            endTime={endTime}
+            timeZone={DEFAULT_TIME_ZONE}
+          />
+        </div>
       </div>
     )
   }

@@ -10,24 +10,26 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.41.7",
+    "@astrojs/starlight": "^0.42.6",
     "@iconify-json/game-icons": "^1.2.4",
     "@iconify-json/line-md": "^1.2.16",
     "@iconify-json/mdi": "^1.2.3",
-    "add-to-calendar-button-react": "^2.14.0",
-    "astro": "^7.2.2",
-    "astro-icon": "^1.1.5",
-    "sharp": "^0.35.4",
-    "starlight-announcement": "^1.1.0",
-    "starlight-base-path": "^0.1.1",
-    "starlight-blog": "^0.29.0",
-    "starlight-heading-badges": "^0.7.0",
+    "add-to-calendar-button": "^3.4.1",
+    "astro": "^7.4.0",
+    "astro-icon": "^1.2.0",
+    "sharp": "^0.35.5",
+    "starlight-announcement": "^2.0.0",
+    "starlight-base-path": "^0.2.1",
+    "starlight-blog": "^0.30.2",
+    "starlight-heading-badges": "^0.8.0",
     "starlight-showcases": "^0.3.2",
-    "starlight-sidebar-topics": "^0.7.1",
-    "starlight-tags": "^1.0.1",
-    "starlight-ui-tweaks": "^0.2.2"
+    "starlight-sidebar-topics": "^0.9.0",
+    "starlight-tags": "^2.0.0",
+    "starlight-ui-tweaks": "^0.2.2",
+    "starlight-view-modes": "^0.15.3"
   },
   "allowScripts": {
-    "esbuild": true
+    "esbuild": true,
+    "fsevents@2.3.3": true
   }
 }

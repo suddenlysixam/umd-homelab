@@ -1,4 +1,4 @@
-.guide img {
+.sl-markdown-content img:not(.author-avatar img, .sl-blog-author-picture) {
     display: block;
     width: 100%;
     max-width: 500px;

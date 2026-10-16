@@ -1,5 +1,6 @@
 ---
 import DefaultSocialIcons from "@astrojs/starlight/components/SocialIcons.astro";
+import StarlightViewModesSocialIcons from "starlight-view-modes/components/SocialIcons.astro";
 // @ts-expect-error Provided by starlight-ui-tweaks integration at runtime.
 import config from "virtual:starlight-ui-tweaks";
 import { Icon } from "astro-icon/components";
@@ -63,6 +64,10 @@ const showSocialIcons = !tweaksConfig?.footer?.showSocialIcons;
   }
 </div>
 
+<div class="custom-view-modes">
+  <StarlightViewModesSocialIcons />
+</div>
+
 <style>
   .social-icons-extended {
     display: flex;
@@ -91,6 +96,22 @@ const showSocialIcons = !tweaksConfig?.footer?.showSocialIcons;
   }
 
   .custom-links::after {
+    content: "";
+    height: 2rem;
+    border-inline-end: 1px solid var(--sl-color-gray-5);
+  }
+
+  .custom-view-modes {
+    display: none;
+  }
+
+  .custom-view-modes:has(.starlight-view-modes-switcher-a) {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .custom-view-modes:has(.starlight-view-modes-switcher-a)::before {
     content: "";
     height: 2rem;
     border-inline-end: 1px solid var(--sl-color-gray-5);
