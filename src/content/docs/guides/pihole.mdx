@@ -2,18 +2,189 @@
 title: "Pi-hole"
 description: "Guide for setting up Pi-hole"
 date: 2026-02-23
-lastUpdated: 2026-02-23
+lastUpdated: 2026-10-20
 tags:
   - network
   - networkplus
-slides: "/slides/2026-02-23_Pihole.pdf"
+sidebar:
+  badge:
+      text: Updated
+      variant: caution
 ---
 
 import { Aside } from '@astrojs/starlight/components';
-import Slides from '@components/meeting/Slides.astro';
 
-<Aside type="caution" title="Under Construction">
-  Guide under construction. Below are the slides from where when we last ran this project.
+## What you will need
+
+This project assumes that you have already followed our [Raspberry Pi installation](/guides/raspberrypi-os) project, and have the resulting configured Raspberry Pi. If you are installing on different hardware or a different OS, these steps may not all be the same for you.
+
+### System Preparation
+
+Before continuing with the project, make sure your system is up to date.
+
+```bash title="Updating System"
+sudo apt update
+sudo apt upgrade -y
+```
+
+## What is Pi-hole?
+
+Pi-hole is a DNS sinkhole/network-level blocker. It can block requests to known advertising/tracking domains before they resolve.
+
+This guide installs Pi-hole and configures the Pi itself to use Pi-hole for DNS.
+
+<Aside type="caution">
+This does not yet make the entire network use Pi-hole. That normally requires configuring the router/DHCP server or individual clients.
 </Aside>
 
-<Slides frontmatter={frontmatter} />
+## Initial Setup
+
+### Installing Pi-Hole
+
+The Pi-hole project has a one-line command that can be used to install a Pi-hole on a machine.
+
+```bash
+curl -sSL https://install.pi-hole.net | bash
+```
+
+### Configuration
+
+The install script that runs will ask if you want custom configurations. We are going to stick to the defaults here.
+
+For this temporary demo, we won't configure a static IP, so you can disregard the warning it gives you.. For a permanent Pi-hole installation, you should give the Pi a consistent IP address, either by configuring a static address or creating a DHCP reservation on your router.
+
+### Starting Commands
+
+Before we do anything, we should verify the installation by checking Pi-hole's status.
+
+```bash
+sudo pihole status
+```
+
+If your installation isn't working as expected you can rerun the install script or run:
+
+```bash
+sudo pihole repair
+```
+
+### Passwords
+
+Now that we know Pi-hole is working properly, let's change the password it gave us.
+
+```bash
+sudo pihole setpassword
+```
+
+or
+
+```bash
+sudo pihole setpassword <your_password>
+```
+
+Our Pi-hole should now be set up, but it's not currently in use. Let's fix that.
+
+## Using Pi-hole
+
+### Listing Connections
+
+NetworkManager stores network configuration in connection profiles. We need the name of the active connection so we can modify its DNS settings. Look for the active Ethernet/Wi-Fi connection (depending on what you are using) and use its name in the following commands.
+
+```bash
+nmcli conn show
+```
+
+### Setting DNS
+
+`ipv4.ignore-auto-dns yes` tells NetworkManager to ignore the DNS settings provided by DHCP and use the manually specified DNS servers instead.
+
+`ipv4.dns "127.0.0.1"` tells NetworkManager to use the specified DNS server (in this case, the local Pi-hole / localhost) for DNS resolution.
+
+```bash
+nmcli conn mod "<connection_name>" ipv4.ignore-auto-dns yes
+nmcli conn mod "<connection_name>" ipv4.dns "127.0.0.1"
+```
+
+### Applying Changes
+
+```bash
+nmcli conn down "<connection_name>"
+nmcli conn up "<connection_name>"
+```
+
+### Testing
+
+Now, let's test if our Pi-hole is working. In a terminal:
+
+```bash
+sudo pihole tail
+```
+
+Then, open up a web browser and visit a website. You should see queries being logged in the terminal where `sudo pihole tail` is running, indicating that Pi-hole is actively filtering DNS requests.
+
+Pi-hole blocks domains at the DNS level. It does not inspect or modify webpage content, so it cannot block every type of advertisement. Additionally, you may want to further customize Pi-hole by adding more block lists or using regex patterns to block specific types of domains.
+
+## Further Customizations
+
+### Manually Blocking Domains
+
+Pi-hole is nice, but the default block list it comes with doesn't block everything.
+
+So let's tell Pi-hole to block more domains.
+
+```bash
+sudo pihole deny <domain_1> <domain_2> <domain_3> ...
+```
+
+For testing purposes, you can try blocking a domain and then attempt to access it in a web browser. You should see that the site is blocked by Pi-hole.
+
+<Aside type="note">
+If you have already visited this website, you may need to clear your browser cache or DNS cache to see the blocking take effect. Try blocking a website that you have not previously visited.
+</Aside>
+
+You can also see the queries being blocked by Pi-hole in real-time by running the following command again:
+
+```bash
+sudo pihole tail
+```
+
+### Reverting Changes
+
+If you ever block a domain you didn't mean to, you can always remove it from Pi-hole's deny list.
+
+```bash
+sudo pihole deny remove <domain_1> ...
+```
+
+Let's allow the domain that you previously blocked in Pi-hole again.
+
+### Regex Blocking
+
+You can also use a regular expression (regex) to block any domain that matches:
+
+```bash
+sudo pihole --regex <your_regex>
+```
+
+For example:
+
+```bash
+sudo pihole --regex ".*\.doubleclick\.net"
+```
+
+### Testing (Again)
+
+Try visiting https://fuzzthepiguy.tech/adtest/ after blocking "doubleclick.net". You should not see any ads.
+
+## Accessing the Web Interface
+
+Pi-hole's web interface provides some extended capabilities, such as viewing query logs, managing block lists, and configuring settings.
+
+You can access it at `http://pi.hole:80/admin`, or directly at `http://<your_pi-hole_ip>:80/admin`.
+
+### Block Lists
+
+One of the things you can do from the web interface is add block lists.
+
+In the sidebar, navigate to Group Management and select Lists.
+
+Now try adding the list `https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts`. You should now be able to block a lot more ads.
