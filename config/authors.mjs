@@ -55,8 +55,8 @@ export const authors = {
     },
     Vincent_Barilaro: {
         name: 'Vincent Barilaro',
-        title: 'Member',
-        // picture: '/images/avatars/vincent-barilaro.jpg',
+        title: 'Officer',
+        picture: '/images/avatars/vincent-barilaro.jpg',
         url: 'https://suddenlysixam.club/authors/vincent-barilaro/'
     }
 }
