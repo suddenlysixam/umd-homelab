@@ -1,0 +1,57 @@
+---
+title: "How To Connect To Eduroam On Raspberry Pi OS"
+description: "Guide for setting up Eduroam on Raspberry Pi OS"
+date: 2026-10-21
+sidebar:
+  badge:
+      text: New
+      variant: success
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+## Connecting to Eduroam on Raspberry Pi OS
+
+<Steps>
+
+1. In the top right, click the network icon and select `Turn on Wireless LAN` (if it is not on already)
+
+    <img src="/images/projects/eduroam/turn-on-wireless.png" alt="Turn on wireless on Raspberry Pi OS" />
+
+1. Click the network icon again, and select `eduroam` from the list of available networks
+
+    <img src="/images/projects/eduroam/select-eduroam.png" alt="Select Eduroam on Raspberry Pi OS" />
+
+1. Enter authentication settings and Eduroam credentials, and Connect
+
+    * **Authentication**: `Protected EAP (PEAP)`
+    * Click the ***checkbox*** for `No CA certificate is required`
+    * **Username**: your UMD email (e.g. `username@umd.edu`)
+    * **Password**: your UMD password
+    * Click `Connect`
+
+    <img src="/images/projects/eduroam/authentication.png" alt="Enter authentication settings and Eduroam credentials on Raspberry Pi OS" />
+
+1. Confirm that you are now connected to Eduroam
+
+    <img src="/images/projects/eduroam/connected.png" alt="Connected to Eduroam on Raspberry Pi OS" />
+
+</Steps>
+
+## What to do next
+
+It is important to note that when editing the Eduroam connection settings, you can after the fact click "Show Password" to view the saved password. This is not ideal when using shared or public devices, as it may expose your credentials to others. For the purposes of the club, we wipe & reinstall Raspberry Pi OS on each of our SD cards after each club meeting. However, you can also once you are done, delete the saved connection as a precaution.
+
+### Deleting the Eduroam Network Connection
+
+<Steps>
+
+1. At the top right, click the network icon and select `Advanced Options > Edit Connections`
+
+    <img src="/images/projects/eduroam/edit-connections.png" alt="Edit network connections on Raspberry Pi OS" />
+
+1. Click on `eduroam`, then click the ***minus button*** at the bottom left of the window to delete the connection
+
+    <img src="/images/projects/eduroam/delete-connection.png" alt="Delete Eduroamnetwork connection on Raspberry Pi OS" />
+
+</Steps>
