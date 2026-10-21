@@ -89,6 +89,8 @@ Other:
 `npm install starlight-tags`
 ### [starlight-ui-tweaks](https://starlight-ui-tweaks.dlcastillop.com/)
 `npm install starlight-ui-tweaks`
+### [starlight-view-modes](https://starlight-view-modes.netlify.app/)
+`npm i starlight-view-modes`
 
 ### Astro Plugins
 #### [astro-icon](https://www.astroicon.dev/)
