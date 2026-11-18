@@ -5,17 +5,9 @@ date: 2026-11-11
 tags:
     - network
     - networkplus
-sidebar:
-  badge:
-      text: New
-      variant: success
 ---
 
 import { Code, Aside, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
-import telegraf_conf from '@assets/files/projects/snmp-grafana/telegraf.conf?raw'
-import telegraf_dockerfile from '@assets/files/projects/snmp-grafana/Dockerfile?raw'
-import influxdb_env from '@assets/files/projects/snmp-grafana/env?raw'
-import compose_yml from '@assets/files/projects/snmp-grafana/compose.yml?raw'
 
 ## What you will need
 
@@ -221,5 +213,5 @@ sudo apt install grafana loki alloy
     2026-11-10 13:05:53.499 unk 127.0.0.1 - - [10/Nov/2026:13:05:53 -0500] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:153.0) Gecko/20100101 Firefox/153.0" 
     ```
 4. Click on the log then expand the subfields to see more of the data. Note the indexed label job which is what we used to query for the log.
-</Steps>
 5. You can also use Wireshark to view the UDP packets sent after the HTTP request is made since the default does not encrypt the log messages
+</Steps>

@@ -1,0 +1,293 @@
+---
+title: "Samba (SMB/CIFS)"
+description: "Guide on setting up Samba on a Raspberry Pi"
+date: 2026-11-18
+tags:
+  - network
+  - networkplus
+sidebar:
+  badge:
+      text: New
+      variant: success
+---
+
+import { Code, Aside, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
+
+## What you will need
+
+This project assumes that you have already followed our [Raspberry Pi installation](/guides/raspberrypi-os) project, and have the resulting configured Raspberry Pi. If you are installing on different hardware or a different OS, these steps may not all be the same for you.
+
+### System Preparation
+
+Before continuing with the project, make sure your system is up to date.
+
+```bash title="Updating System"
+sudo apt update
+sudo apt upgrade -y
+```
+
+Install a text editor of your choice. Here we use `vim` as an example.
+
+```bash title="Installing Vim"
+sudo apt install vim
+```
+
+## Concepts
+
+### What is Samba?
+
+Samba is a free, open-source software suite that facilitates the sharing of folders between Windows, macOS, and Linux systems over a network using the Server Message Block (SMB) protocol.
+
+### What is SMB/CIFS?
+
+SMB (Server Message Block) is a network protocol used to share files, printers, and other resources between computers. It operates using a client-server model, where a client connects to a server to access shared resources over a network.
+
+Modern SMB typically communicates over TCP port 445 and supports features such as authentication, access control, and encryption.
+
+CIFS (Common Internet File System) refers to an older dialect of SMB, commonly associated with SMB1. Although the terms SMB and CIFS are sometimes used interchangeably, modern implementations generally use SMB2 or SMB3, which offer improved performance and security.
+
+## Basic Storage Commands
+
+Here are some basic storage commands that are commonly used when working with Samba and shared directories:
+
+* `ls`: List the contents of a directory.
+* `cd`: Change the current directory.
+* `mkdir`: Create a new directory.
+* `rm`: Remove a file or directory.
+* `cp`: Copy files or directories.
+* `mv`: Move or rename files or directories.
+* `chmod`: Change the permissions of a file or directory.
+* `chown`: Change the owner of a file or directory.
+
+<Aside type="tip">
+For more information about these commands and more, see our [Bash Reference](/reference/bash) page.\
+Additionally for editing files, see our [Vim Reference](/reference/vim) page.
+</Aside>
+
+## Samba
+
+### Package Installation
+
+To install Samba on your Raspberry Pi, use the following command:
+
+```bash title="Installing Samba"
+sudo apt install samba samba-common-bin smbclient cifs-utils
+```
+
+In order to also run the tcpdump command to show network traffic at the end of this guide, you will need to install the `tcpdump` package:
+
+```bash title="Installing tcpdump"
+sudo apt install tcpdump
+```
+
+### Configure Network Connection
+
+For the purposes of our demonstration, we are going to create a local network connection for our Pi's to communicate on so that we can demonstrate file sharing using Samba. If you are using a different network setup, you may need to skip or adjust these steps accordingly.
+
+<Steps>
+1. Check the existing network connections:
+
+    ```bash title="Checking Network Connections"
+    nmcli connection show
+    ```
+
+1. Create a new network connection:
+
+    Replace `<IP_ADDRESS>` with an IP address for your Pi. For the purposes of our demonstration, we will assign each Pi a static IP address within the `10.10.10.x` range, such as `10.10.10.11`, `10.10.10.12`, etc.
+
+    ```bash title="Creating Network Connection"
+    sudo nmcli connection add \
+    type ethernet \
+    ifname eth0 \
+    con-name samba-lab \
+    ipv4.method manual \
+    ipv4.addresses <IP_ADDRESS>/24 \
+    ipv4.never-default yes \
+    ipv6.method disabled
+    ```
+
+    <Aside type="note">
+    This assumes that when checking your network connections, you observed that the ethernet device is named `eth0`. If your device has a different name, you will need to adjust the `ifname` parameter accordingly.
+    </Aside>
+
+1. Activate the new network connection:
+
+    ```bash title="Activating Network Connection"
+    sudo nmcli connection up samba-lab
+    ```
+
+1. Verify the network connection:
+
+    ```bash title="Verifying Network Connection"
+    nmcli connection show samba-lab
+    ```
+
+    ```bash title="Checking IP Address"
+    ip -4 addr show eth0
+    ```
+
+1. In the top right, click the network icon and turn off Wi-Fi to ensure the Pi uses the wired network connection
+
+1. Test the network connection by pinging another device on the same network:
+
+    ```bash title="Testing Network Connection"
+    ping <OTHER_DEVICE_IP>
+    ```
+</Steps>
+
+### Share a Folder from your Raspberry Pi
+
+The first step is to create a folder to share. For the purposes of this guide, we will create a folder called shared in the home directory of the current user (which in this guide we assume is `itclub`):
+
+```bash title="Creating Shared Folder"
+cd ~
+mkdir shared
+chmod 0700 shared
+```
+
+### Set Samba Password for User
+
+```bash
+sudo smbpasswd -a itclub
+```
+
+<Aside type="note">
+If you want to configure a different user than `itclub`, replace `itclub` with your desired username in the commands above and make sure to set a Samba password for that user. The Samba account must already exist as a local system account.
+</Aside>
+
+### Configure Samba Share
+
+<Steps>
+
+1. Open the Samba configuration file for editing:
+
+    ```bash title="Configuring Samba Share"
+    sudo vim /etc/samba/smb.conf
+    ```
+
+1. Add the following under the `[global]` section in the `smb.conf` file:
+
+    ```
+    interfaces = lo eth0
+    bind interfaces only = yes
+    ```
+
+1. Add the following at the end of the `smb.conf` file to define the shared folder:
+
+    ```bash title="Defining Shared Folder"
+    [shared]
+        path = /home/itclub/shared
+        browseable = yes
+        read only = no
+        valid users = itclub
+        create mask = 0600
+        directory mask = 0700
+    ```
+
+    <Aside type="note">
+    Make sure that the home directory path in the `path` parameter matches the actual home directory of the user you are sharing the folder for.\
+    Make sure the `valid users` parameter matches the Samba user you created earlier.
+    </Aside>
+
+1. Test the Samba configuration:
+
+    ```bash title="Testing Samba Configuration"
+    sudo testparm -s
+    ```
+
+1. Restart the Samba service to apply the changes:
+
+    ```bash title="Restarting Samba Service"
+    sudo systemctl restart smbd
+    ```
+
+1. Verify that the Samba service is running:
+
+    ```bash title="Verifying Samba Service"
+    sudo systemctl status smbd
+    ```
+
+</Steps>
+
+### Access the Shared Folder
+
+To access the shared folder from another device on the same network, use the following steps:
+
+<Steps>
+
+1. On a Linux machine (such as another Raspberry Pi), you can use the `smbclient` command:
+
+    ```bash title="Accessing Shared Folder from Linux"
+    smbclient //<IP_ADDRESS>/shared -U itclub
+    ```
+
+    Replace `<IP_ADDRESS>` with the IP address of the Raspberry Pi hosting the shared folder you want to access.
+
+1. Enter the password for the `itclub` user when prompted.
+
+</Steps>
+
+### Using `smbclient` Commands
+
+* `put`: upload files from your local machine to the shared folder.
+* `ls`: list the contents of the shared folder within the `smbclient` prompt.
+* `get`: download files from the shared folder to your local machine within the `smbclient` prompt.
+
+<Steps>
+
+1. Create a file on your local machine:
+
+    ```bash title="Creating a File on Local Machine"
+    cd ~
+    echo "Hello from <your-first-name>!" > <your-first-name>.txt
+    ```
+
+    Replace `<your-first-name>` with your actual first name.
+
+    <Aside type="note">
+    The next few steps will use smbclient commands with the -c flag to run the commands non-interactively. You could also run smbclient interactively without the -c flag if you prefer, and then use each of the commands following the -c flag within the interactive smbclient session.
+    </Aside>
+
+1. Upload the file to the shared folder using `smbclient`:
+
+    ```bash title="Uploading File to Shared Folder"
+    smbclient //<IP_ADDRESS>/shared -U itclub -c "put <your-first-name>.txt"
+    ```
+
+1. Verify that the file has been uploaded to the shared folder using `smbclient`:
+
+    ```bash title="Listing Files in Shared Folder"
+    smbclient //<IP_ADDRESS>/shared -U itclub -c "ls"
+    ```
+
+1. Once someone else has uploaded a file to your shared folder, verify the contents of the shared folder on your local machine:
+
+    ```bash title="Verifying File in Shared Folder"
+    ls -l /home/itclub/shared
+    ```
+
+1. Verify the contents of the file on your local machine:
+
+    ```bash title="Verifying File Contents"
+    cat /home/itclub/shared/<their-first-name>.txt
+    ```
+
+</Steps>
+
+### Capture Samba Network Packets
+
+To capture network packets related to Samba traffic, you can use the `tcpdump` command. For example, to capture packets on the `eth0` interface, use:
+
+```bash title="Capturing Samba Packets"
+sudo tcpdump -i eth0 -nn 'arp or tcp port 445'
+```
+
+You might see:
+* ARP requests and replies: Mapping an IP address to a MAC address.
+* TCP SYN, SYN-ACK, and ACK: Establishing the TCP connection.
+* TCP port 445: Traffic associated with the SMB service.
+
+## Additional Resources
+
+* [Samba Documentation](https://www.samba.org/samba/docs/)
+* [Raspberry Pi Samba Documentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#samba)
